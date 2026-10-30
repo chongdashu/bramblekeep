@@ -1,0 +1,27 @@
+{
+  "tripo": {
+    "model_task": "78af6573-648f-4b1e-81f7-9279483558b8",
+    "rig_check": "0d9a0985-2608-490e-a2b4-52805b665b05",
+    "rig_task": "7d20c982-7ed8-4210-93fe-410dab0f350e",
+    "five_clips_task": "e7892936-0aeb-4cd9-9abc-407f3582d28e",
+    "replacement_attack_task": "f40d9fa8-5267-453e-b7d1-dc0d84561b38",
+    "model": "P1-20260311",
+    "rig_model": "v1.0-20240301",
+    "credits": 135
+  },
+  "fal_usd": 0.0372,
+  "intended_height_m": 1.6,
+  "reimport_rest_bounds_m": {
+    "width": 0.99883,
+    "depth": 0.40392,
+    "height": 1.6
+  },
+  "triangles": 11541,
+  "glb_sha256": "cf6d6f915c32c60797f8be3d3a6dafd2d00c9aae3dfe621ba7098d8b437f5ef1",
+  "limitations": [
+    "No hand sockets implemented or verified.",
+    "Attack uses a 2.17 s unarmed boxing preset; timing and expressiveness need gameplay review.",
+    "Run hip static offset corrected to match walk; cycle contact, clipping, loop closure and runtime playback not verified.",
+    "Comparison uses orthographic front views but different lighting and framing."
+  ]
+}

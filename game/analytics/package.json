@@ -1,0 +1,6 @@
+{
+  "name": "bramblekeep-analytics",
+  "private": true,
+  "type": "module",
+  "devDependencies": { "convex": "1.48.0" }
+}

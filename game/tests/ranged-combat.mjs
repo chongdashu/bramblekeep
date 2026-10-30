@@ -1,0 +1,17 @@
+import {launchChrome,connect} from '../../tests/lib/cdp.mjs';import {mkdirSync,writeFileSync} from 'node:fs';
+const base=process.argv[2]??'http://127.0.0.1:53998',sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const c=await launchChrome({width:1280,height:720}),d=await connect(c.wsUrl);
+try{const [t]=await d.pages(),p=await d.attach(t.targetId);const errors=[];p.on(m=>{if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails.text)});await p.S('Runtime.enable');await p.S('Page.enable');await p.S('Page.navigate',{url:`${base}/?scene=solo&autostart&envDefaults`});await p.waitFor("window.__game?.phase?.()==='playing' && !!window.__game.castlePlay && window.__game.gameAudio().loaded===Object.keys(window.__game.gameAudio().counts).length",30000,'play');
+const key=(type,code,key,n)=>p.S('Input.dispatchKeyEvent',{type,code,key,windowsVirtualKeyCode:n});const down=(code,k,n)=>key('keyDown',code,k,n),up=(code,k,n)=>key('keyUp',code,k,n);
+// Unlock Web Audio before measuring rapid taps.
+await down('KeyW','w',87);await sleep(100);await up('KeyW','w',87);await p.waitFor("window.__game.gameAudio().unlocked && window.__game.gameAudio().music === 'castleCamp'",10000,'camp music');
+// Rapid taps during recovery should not replay the cast sound.
+await p.evalJS("document.querySelector('#gym-class').click()");
+await down('Space',' ',32);await up('Space',' ',32);await sleep(40);
+for(let i=0;i<4;i++){await down('Space',' ',32);await up('Space',' ',32);await sleep(45);}
+const casts=await p.evalJS('window.__game.gameAudio().counts.magic');if(casts!==1)throw new Error(`cooldown allowed ${casts} rapid casts`);
+await sleep(1100);await p.evalJS("document.querySelector('#gym-class').click();document.querySelector('#gym-class').click()");
+await down('ShiftLeft','Shift',16);await down('KeyW','w',87);await p.waitFor('window.__game.castlePlay().playerZ < 1.5',15000,'bridge crossed');await up('KeyW','w',87);await up('ShiftLeft','Shift',16);
+await p.evalJS("document.querySelector('#gym-class').click()");const cast=await p.evalJS('window.__game.environmentLab().characters');if(Math.hypot(cast[0].x-cast[1].x,cast[0].z-cast[1].z)<.5)throw new Error('previous hero overlaps the active caster');await down('Space',' ',32);await p.waitFor("window.__game.castlePlay().projectiles.some(p=>p.kind==='orb')",8000,'spell orb');mkdirSync('out/ranged',{recursive:true});let img=await p.S('Page.captureScreenshot',{format:'png'});writeFileSync('out/ranged/spell.png',Buffer.from(img.data,'base64'));await p.waitFor('window.__game.gameAudio().counts.hit > 0 && window.__game.gameAudio().counts.orbImpact > 0',10000,'impact and orb sounds');await up('Space',' ',32);const spell=await p.evalJS('window.__game.castlePlay()');console.log('spell',JSON.stringify(spell));
+await sleep(1200);await p.evalJS("document.querySelector('#gym-class').click()");await down('Space',' ',32);await sleep(400);await up('Space',' ',32);await p.waitFor("window.__game.castlePlay().attackKind==='Scout' && window.__game.castlePlay().attackAge<.9",8000,'arrow attack started');img=await p.S('Page.captureScreenshot',{format:'png'});writeFileSync('out/ranged/arrow.png',Buffer.from(img.data,'base64'));await sleep(1200);await up('Space',' ',32);const bow=await p.evalJS('window.__game.castlePlay()');console.log('bow',JSON.stringify(bow));console.log('audio',JSON.stringify(await p.evalJS('window.__game.gameAudio()')));if(errors.length)throw new Error(errors.join(','));
+}finally{await d.close();await c.close();}

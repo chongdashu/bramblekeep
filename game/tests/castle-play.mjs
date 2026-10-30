@@ -1,0 +1,31 @@
+import {launchChrome,connect} from '../../tests/lib/cdp.mjs';
+import {mkdirSync,writeFileSync} from 'node:fs';
+const base=process.argv[2] ?? 'http://127.0.0.1:5191';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const chrome=await launchChrome({width:1280,height:720});const cdp=await connect(chrome.wsUrl);
+try {
+ const [target]=await cdp.pages();const p=await cdp.attach(target.targetId);const errors=[];
+ p.on(m=>{if(m.method==='Runtime.exceptionThrown') errors.push(m.params.exceptionDetails.text)});
+ await p.S('Runtime.enable');await p.S('Page.enable');
+ await p.S('Page.navigate',{url:`${base}/?scene=solo&autostart&envDefaults`});
+ await p.waitFor("window.__game?.phase?.() === 'playing' && !!window.__game.castlePlay",30000,'castle play');
+ console.log('initial',JSON.stringify(await p.evalJS('window.__game.castlePlay()')));
+ console.log('hud',await p.evalJS("document.querySelector('#gym-status').textContent"));
+ const initial=await p.evalJS('window.__game.castlePlay()');
+ await p.evalJS("document.querySelector('#gym-class').click()");
+ const changed=await p.evalJS('({ ...window.__game.castlePlay(), selected:window.__game.environmentLab().selected })');
+ if(changed.selected!=='Spellcaster' || Math.hypot(changed.playerX-initial.playerX,changed.playerZ-initial.playerZ)>.01) throw new Error('Class change moved the player');
+ await p.evalJS("document.querySelector('#gym-class').click();document.querySelector('#gym-class').click()");
+ const key=(type,code,key,windowsVirtualKeyCode)=>p.S('Input.dispatchKeyEvent',{type,code,key,windowsVirtualKeyCode});
+ await key('keyDown','ShiftLeft','Shift',16);await key('keyDown','KeyW','w',87);
+ await p.waitFor('window.__game.castlePlay().playerZ < -3',15000,'walk from camp');
+ await key('keyUp','KeyW','w',87);await key('keyUp','ShiftLeft','Shift',16);
+ await key('keyDown','Space',' ',32);await sleep(3000);await key('keyUp','Space',' ',32);
+ const state=await p.evalJS('window.__game.castlePlay()');console.log('combat',JSON.stringify(state));
+ if(!state.defeats)throw new Error('No enemies defeated by actual keyboard input');
+ mkdirSync('out/castle-play',{recursive:true});const shot=await p.S('Page.captureScreenshot',{format:'png'});writeFileSync('out/castle-play/combat.png',Buffer.from(shot.data,'base64'));
+ await p.S('Page.navigate',{url:`${base}/?scene=greybox`});
+ await p.waitFor("window.__game?.phase?.() === 'playing' && !!window.__game.integratedArt",30000,'greybox');
+ console.log('archive',JSON.stringify(await p.evalJS('window.__game.integratedArt()')));
+ if(errors.length)throw new Error(errors.join(','));
+} finally {await cdp.close();await chrome.close();}

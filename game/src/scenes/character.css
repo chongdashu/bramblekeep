@@ -1,0 +1,20 @@
+.character-lab { position: fixed; z-index: 20; right: max(12px, env(safe-area-inset-right)); top: calc(68px + env(safe-area-inset-top)); width: min(340px, calc(100vw - 24px)); font: 500 13px/1.35 system-ui, sans-serif; color: #eef3ee; }
+.character-lab[hidden], .character-lab-panel[hidden] { display: none; }
+.character-lab-bar { display: flex; gap: 8px; justify-content: flex-end; }
+.character-lab button, .character-lab-exit { min-height: 44px; border: 1px solid #7c9584; border-radius: 10px; padding: 8px 13px; background: #203c34; color: #fff; font: 700 13px system-ui, sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.character-lab button:focus-visible, .character-lab-exit:focus-visible, .character-lab input:focus-visible { outline: 3px solid #f5d770; outline-offset: 2px; }
+.character-lab-panel { margin-top: 8px; padding: 12px; border-radius: 12px; background: #172b26f2; box-shadow: 0 8px 30px #0007; max-height: min(65vh, 580px); overflow-y: auto; }
+.character-lab-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.character-lab-panel p { margin: 8px 0; color: #cedbd0; }
+.character-lab-fields { display: grid; gap: 10px; }
+.character-lab-fields label { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; }
+.character-lab-fields output { color: #f5d770; font-variant-numeric: tabular-nums; }
+.character-lab-fields input { width: 100%; grid-column: 1 / -1; margin: 0; accent-color: #e8c766; min-height: 28px; }
+.character-lab-foot { font-size: 12px; }
+@media (max-width: 500px) { .character-lab { top: calc(68px + env(safe-area-inset-top)); width: min(300px, calc(100vw - 24px)); } .character-lab-panel { max-height: 55vh; } }
+/* The engine's DEV debug toggle sits over the touch attack button on phones;
+   this scene has its own tuning panel, so keep the DEV overlay out of that target. */
+@media (pointer: coarse) {
+  body:has(#character-lab:not([hidden])) #dbg-toggle,
+  body:has(#character-lab:not([hidden])) #dbg { display: none !important; }
+}

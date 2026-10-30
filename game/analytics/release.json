@@ -1,0 +1,12 @@
+{
+  "$comment": "Anonymous play stats are off in the public source: no deployment is named here. To use them, deploy game/analytics/convex to your own Convex project and fill in the sites below.",
+  "web": {
+    "site": ""
+  },
+  "wavedash": {
+    "productionSite": "",
+    "sites": {},
+    "playtestGameCloudId": "",
+    "liveGameCloudId": ""
+  }
+}

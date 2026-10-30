@@ -1,0 +1,16 @@
+[workspace]
+# crates/*     the engine (vgd-engine) and any shared engine crates
+# game/crate   the game's simulation, compiled to sim.wasm
+members = ["crates/*", "game/crate"]
+resolver = "2"
+
+# The game crate depends on the engine as `vgd-engine = { workspace = true }`.
+[workspace.dependencies]
+vgd-engine = { path = "crates/engine" }
+
+# Small, fast wasm: no threads, no SharedArrayBuffer, no wasm-bindgen, no wasm-opt.
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

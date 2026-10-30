@@ -1,0 +1,20 @@
+.world-panel { position:absolute; right:calc(24px + var(--safe-r)); top:50%; translate:0 -50%; width:min(240px, 24vw); color:#f7f2df; font:600 14px/1.2 var(--display); }
+.world-toggle { width:100%; min-height:44px; display:flex; align-items:center; gap:7px; padding:8px 11px; border:1px solid #d5c48d; border-radius:12px; color:#fff3d1; background:linear-gradient(#3d6380eF,#1c3856f5); box-shadow:0 3px #12243b,0 8px 18px #08142566; font:700 15px/1 var(--display); text-align:left; }
+.world-dot,.world-player-dot { flex:none; width:8px; height:8px; border-radius:50%; background:#7ee5a8; box-shadow:0 0 7px #7ee5a866; }
+.world-panel[data-online="false"] .world-dot { background:#e9b46e; box-shadow:none; }
+.world-heading { flex:1; }
+.world-count { color:#d5e5ee; font-size:12px; white-space:nowrap; }
+.world-chevron { font-size:18px; }
+.world-details { margin-top:7px; padding:12px; border:1px solid #aec2bd80; border-radius:12px; background:#142d46eF; box-shadow:0 7px 16px #08142566; }
+.world-state { color:#fff0bb; font-size:13px; line-height:1.3; }
+.world-player-heading { margin-top:11px; color:#a8c6d8; font-size:10px; letter-spacing:.08em; }
+.world-players { display:grid; gap:7px; list-style:none; padding:0; margin:8px 0 0; max-height:min(240px, 33dvh); overflow:auto; overscroll-behavior:contain; touch-action:pan-y; }
+.world-players li { display:flex; align-items:center; gap:7px; min-width:0; }
+.world-player-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.world-player-class { color:#bcd2dd; font-size:11px; }
+.world-empty { margin:8px 0 0; color:#c4d1d9; font-size:12px; }
+@media (max-width:999px), (max-height:479px) {
+  .world-panel { top:calc(10px + var(--safe-t)); right:calc(10px + var(--safe-r)); translate:none; width:min(220px, calc(100vw - 20px)); }
+  .world-toggle { min-height:38px; font-size:13px; padding:6px 9px; }
+  .world-details { position:absolute; right:0; width:100%; max-height:calc(100dvh - 65px - var(--safe-t)); overflow:auto; touch-action:pan-y; }
+}

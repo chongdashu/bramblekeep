@@ -1,0 +1,6 @@
+{
+  "platform": {"x": 9, "z": -10, "width": 5.2, "depth": 4, "height": 0.9, "rampWidth": 2.4, "rampLength": 3},
+  "well": {"x": -5, "z": 12.5, "radius": 0.85},
+  "supplies": {"x": 8.8, "z": 22.7, "radius": 0.7},
+  "waymarker": {"x": 5.0, "z": -14.0, "radius": 0.5}
+}

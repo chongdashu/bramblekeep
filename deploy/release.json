@@ -1,0 +1,29 @@
+{
+  "$comment": "Engine-wide release rules for scripts/lib/package-game.mjs. The web root (<gameDir>/public), the public asset allowlist (release.assets) and the identity come from the active game's game.json.",
+  "entry": "index.html",
+  "maxFileBytes": 26214400,
+  "devMarker": "vgd:dev-only",
+  "sourcePaths": ["src", "index.html", "crates", "Cargo.toml", "Cargo.lock", "vite.config.ts", "package.json", "package-lock.json", "tsconfig.json", "game.config.json", "deploy/release.json"],
+  "preflight": [],
+  "prebuild": [
+    { "name": "wasm", "run": ["node", "scripts/build-wasm.mjs"] }
+  ],
+  "forbidden": [],
+  "targets": {
+    "web": {
+      "env": { "VITE_PLATFORM": "web", "VITE_PLATFORM_ADS": "" },
+      "vercel": true,
+      "forbidden": ["sdk.crazygames.com", "updateLoadProgressZeroToOne"]
+    },
+    "wavedash": {
+      "env": { "VITE_PLATFORM": "wavedash", "VITE_PLATFORM_ADS": "", "VITE_COLYSEUS_URL": { "fromEnv": "VITE_COLYSEUS_URL", "optional": true } },
+      "publicUrl": "https://wavedash.com/games/bramblekeep",
+      "forbidden": ["sdk.crazygames.com"]
+    },
+    "crazygames": {
+      "env": { "VITE_PLATFORM": "crazygames", "VITE_PLATFORM_ADS": "" },
+      "zip": true,
+      "forbidden": ["updateLoadProgressZeroToOne", "requestFullscreen"]
+    }
+  }
+}

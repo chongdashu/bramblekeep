@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bramblekeep · Master</title>
+<style>
+@font-face { font-family: "Baloo 2"; src: url("../game/public/assets/ui/fonts/Baloo2.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
+:root { color-scheme: light; --ink: #1d3557; --ink-soft: #3e5878; --muted: #687c95; --page: #eef3f9; --card: #ffffff;
+  --blue: #2f5fa8; --blue-deep: #1d3f78; --gold: #f6c84c; --gold-deep: #a97a10; --green: #3f8a3a; --coral: #e0735a; --line: #c9d5e4; --bar: 56px;
+  --round: "Baloo 2", "Avenir Next", system-ui, sans-serif; --sans: "Avenir Next", "Trebuchet MS", system-ui, sans-serif; --mono: ui-monospace, SFMono-Regular, Menlo, monospace; }
+* { box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; }
+body { margin: 0; color: var(--ink); font: 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased;
+  background: radial-gradient(ellipse at 88% 0%, #fff1c7 0%, transparent 42%) fixed, radial-gradient(ellipse at 0% 100%, #dcefd5 0%, transparent 40%) fixed, var(--page); }
+a { color: var(--blue); }
+.bar { position: fixed; inset: 0 0 auto; height: var(--bar); z-index: 5; display: flex; align-items: center; gap: 14px; padding: 0 20px;
+  background: rgb(238 243 249 / 0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); flex: none; }
+.brand .tower { width: 26px; height: 26px; flex: none; }
+.brand i { font: 800 22px/1 var(--round); font-style: normal; letter-spacing: .02em; color: var(--blue-deep); }
+.crumb { font: 800 20px/1 var(--round); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dots { display: flex; gap: 5px; margin-left: auto; flex: none; overflow-x: auto; }
+.dots a { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 7px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); font-size: 12px; font-weight: 800; text-decoration: none; }
+.dots a.key { border-color: var(--gold-deep); }
+.dots a.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+@media (max-width: 700px) { .dots { display: none; } }
+
+.slide { min-height: 100vh; padding: calc(var(--bar) + 24px) 32px 28px; scroll-snap-align: start; display: grid; align-items: center; }
+@media (max-width: 700px) { .slide { padding: calc(var(--bar) + 16px) 16px 20px; } }
+
+/* master slides */
+.beat { grid-template-columns: minmax(260px, 0.6fr) minmax(0, 1.4fr); gap: 36px; }
+@media (max-width: 900px) { .beat { grid-template-columns: 1fr; gap: 18px; } }
+.beat .num { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--blue); color: #fff; font: 800 26px/1 var(--round); }
+.beat .sec { display: block; margin-bottom: 12px; font: 800 13px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.beat[data-sec=features] .num { background: var(--green); }
+.beat[data-sec=challenges] .num { background: var(--coral); }
+.beat[data-sec=tips] .num { background: var(--gold); color: #4a3505; }
+.dots .gap { width: 10px; }
+.dots .lab { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; align-self: center; padding: 0 2px 0 6px; }
+.beat h2 { margin: 14px 0 0; font: 800 clamp(34px, 4.4vw, 58px)/1 var(--round); letter-spacing: -.01em; color: var(--blue-deep); }
+.beat .kicker { margin: 10px 0 0; font-size: clamp(17px, 1.6vw, 21px); font-weight: 700; color: var(--ink-soft); }
+.points { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.points li { font-size: clamp(18px, 1.7vw, 23px); font-weight: 700; padding-left: 26px; position: relative; }
+.points li::before { content: ""; position: absolute; left: 4px; top: .5em; width: 10px; height: 10px; border-radius: 3px; transform: rotate(45deg); background: var(--gold); box-shadow: 0 0 0 2px var(--gold-deep); }
+.open { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 10px 18px; border-radius: 999px; background: var(--blue); color: #fff;
+  font-weight: 800; text-decoration: none; }
+.open:hover { background: var(--blue-deep); }
+.open kbd { background: rgb(255 255 255 / .18); border: 0; color: #fff; }
+.stage { min-width: 0; }
+
+/* visuals */
+figure { margin: 0; min-width: 0; }
+.v-one img, .v-one video, .v-pair img, .v-pair video, .v-grid img, .v-grid video { display: block; width: 100%; border-radius: 14px; background: #dfe7f1;
+  box-shadow: 0 16px 36px rgb(29 53 87 / .2); object-fit: contain; }
+.v-one img, .v-one video { max-height: calc(100vh - var(--bar) - 150px); width: auto; max-width: 100%; margin: 0 auto; }
+.beat .v-one img, .beat .v-one video { max-height: calc(100vh - var(--bar) - 70px); }
+.v-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.v-pair img, .v-pair video { max-height: calc(100vh - var(--bar) - 230px); }
+.ls .v-one img, .ls .v-one video { max-height: calc(100vh - var(--bar) - 190px); }
+.v-grid { display: grid; gap: 12px; margin: 0 auto; align-items: start; }
+.v-grid.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 1100px; }
+.v-grid.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, calc((100vh - var(--bar) - 270px) * 1.3333 + 12px)); }
+.v-grid img { aspect-ratio: 4 / 3; object-fit: contain; }
+.v-row { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; margin: 0 auto; width: min(100%, 1180px); }
+.v-row video, .v-row img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #7a7a7a; box-shadow: 0 12px 28px rgb(29 53 87 / .2); }
+.v-grid.n3 img { max-height: calc(100vh - var(--bar) - 220px); }
+/* cropped 16:9 media: keep the top part only */
+.crop { --maxh: calc(100vh - var(--bar) - 150px); position: relative; overflow: hidden; border-radius: 14px; margin: 0 auto; background: #000;
+  aspect-ratio: var(--ar); width: min(100%, calc(var(--maxh) * var(--ar))); box-shadow: 0 16px 36px rgb(29 53 87 / .2); }
+.beat .crop { --maxh: calc(100vh - var(--bar) - 70px); }
+.v-pair .crop { --maxh: calc(100vh - var(--bar) - 230px); }
+.ls .v-one .crop { --maxh: calc(100vh - var(--bar) - 190px); }
+.v-one .crop img, .v-one .crop video, .v-pair .crop img, .v-pair .crop video, .crop img, .crop video { position: absolute; top: 0; left: 0; width: 100%; height: auto;
+  max-height: none; max-width: none; margin: 0; border-radius: 0; box-shadow: none; }
+figcaption { margin-top: 8px; font-size: 15px; font-weight: 700; color: var(--ink-soft); display: flex; gap: 8px; align-items: center; justify-content: center; }
+.tag { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; background: var(--green); color: #fff; }
+.tag.before { background: #b3bccb; color: #1f2a3c; }
+.v-compare { margin: 0 auto; width: min(100%, 980px); background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 10px 22px 14px; box-shadow: 0 12px 28px rgb(29 53 87 / .12); }
+.v-compare table { width: 100%; border-collapse: collapse; font-size: clamp(15px, 1.5vw, 21px); text-align: left; }
+.v-compare th, .v-compare td { padding: 12px 10px; border-bottom: 1px solid #e3eaf3; }
+.v-compare tr:last-child td { border-bottom: 0; }
+.v-compare th { font: 800 clamp(16px, 1.6vw, 22px)/1.1 var(--round); color: var(--ink-soft); }
+.v-compare th.hi { color: var(--blue-deep); }
+.v-compare td:first-child { color: var(--ink-soft); font-weight: 700; }
+.v-compare td.hi { font-weight: 800; color: var(--blue-deep); background: #fff6dc; }
+.v-compare td:not(:first-child) { font-weight: 700; }
+.v-compare p { margin: 8px 0 0; font-size: 13px; color: var(--muted); text-align: right; }
+.v-flow { list-style: none; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 0; max-width: 1100px; }
+.v-flow li { display: flex; flex-direction: column; justify-content: center; gap: 6px; width: 210px; min-height: 130px; padding: 16px 18px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 18px; box-shadow: 0 12px 28px rgb(29 53 87 / .12); text-align: left; position: relative; margin: 8px 22px; }
+.v-flow li b { font: 800 26px/1.05 var(--round); color: var(--blue-deep); }
+.v-flow li span { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.v-flow li:not(:last-child)::after { content: "→"; position: absolute; right: -36px; top: 50%; transform: translateY(-50%); font: 800 30px/1 var(--round); color: var(--gold-deep); }
+.beat .v-flow li { width: 190px; margin: 8px 18px; }
+.ls .v-flow li { width: 226px; min-height: 170px; padding: 20px 20px; margin: 8px 20px; }
+.ls .v-flow li b { font-size: 32px; }
+.ls .v-flow li span { font-size: 19px; }
+.v-open { display: inline-flex; align-items: center; gap: 12px; margin: 0 auto; padding: 22px 34px; border-radius: 999px; background: var(--gold); color: #3d2a03;
+  font: 800 clamp(22px, 2.6vw, 34px)/1 var(--round); text-decoration: none; box-shadow: 0 16px 36px rgb(169 122 16 / .3); }
+.v-open:hover { background: #ffd866; }
+.open.alt { background: var(--card); color: var(--blue-deep); border: 1px solid var(--line); margin-left: 8px; }
+.open.alt:hover { background: #fff6dc; }
+.v-route { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: 12px; width: min(680px, 100%); counter-reset: r; text-align: left; }
+.v-route li { counter-increment: r; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 20px; font-size: clamp(20px, 2.2vw, 28px); font-weight: 800; }
+.v-route li::before { content: counter(r); display: inline-grid; place-items: center; width: 36px; height: 36px; margin-right: 14px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 18px; }
+.v-prompt { margin: 0 auto; max-width: 920px; background: #16263f; color: #eef3f9; border-radius: 18px; padding: 28px 32px; font: clamp(17px, 1.9vw, 25px)/1.55 var(--mono);
+  white-space: pre-wrap; text-align: left; box-shadow: 0 16px 36px rgb(29 53 87 / .25); }
+.v-prompt mark { background: var(--gold); color: #16263f; border-radius: 4px; padding: 0 4px; }
+.v-bars { list-style: none; margin: 0 auto; padding: 22px 26px; display: grid; gap: 9px; width: min(860px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: 18px; text-align: left; }
+.v-bars li { display: grid; grid-template-columns: minmax(150px, 0.9fr) 1.6fr 52px; gap: 12px; align-items: center; font-size: clamp(15px, 1.5vw, 20px); font-weight: 700; }
+.v-bars .bt { height: 18px; border-radius: 9px; background: #e3eaf3; overflow: hidden; }
+.v-bars .bf { display: block; height: 100%; border-radius: 9px; background: #8fa6c3; }
+.v-bars .hi .bf { background: var(--gold); }
+.v-bars .hi { color: var(--blue-deep); }
+.v-bars .bv { font: 700 15px var(--mono); color: var(--muted); text-align: right; }
+.v-bars.few { width: min(100%, 1120px); padding: 40px 44px; gap: 30px; }
+.v-bars.few li { grid-template-columns: 300px 1fr 200px; gap: 22px; font: 800 clamp(22px, 2.4vw, 34px)/1.1 var(--round); }
+.v-bars.few .bt { height: 48px; border-radius: 24px; }
+.v-bars.few .bf { border-radius: 24px; }
+.v-bars.few .bv { font: 800 clamp(22px, 2.4vw, 34px)/1 var(--round); color: var(--ink); }
+.v-bars.few .hi .bv { color: var(--blue-deep); }
+
+/* lesson slides */
+.ls { align-content: center; align-items: center; gap: 18px; text-align: center; }
+.ls h2 { margin: 0; font: 800 clamp(30px, 3.6vw, 48px)/1.08 var(--round); color: var(--blue-deep); }
+.ls .line { margin: 6px 0 0; font-size: clamp(17px, 1.7vw, 22px); font-weight: 700; color: var(--ink-soft); }
+.ls .count { font-size: 13px; color: var(--muted); font-weight: 800; letter-spacing: .08em; }
+.ls .body { display: grid; align-items: center; min-height: 0; }
+.end { text-align: center; }
+.end h2 { font: 800 clamp(30px, 4vw, 52px)/1.05 var(--round); color: var(--blue-deep); margin: 0 0 18px; }
+.end .play { font: 800 clamp(22px, 2.6vw, 34px)/1.2 var(--round); }
+
+/* video mode (?video): what the stitched voice-over video shows */
+body.video .bar, body.video a.open, body.video .keys, body.video .dots { display: none !important; }
+body.video .slide { padding-top: 48px; padding-bottom: 48px; }
+body.video .ls .body { width: 100%; max-width: 1240px; margin: 0 auto; }
+body.video video { pointer-events: none; }
+/* hero */
+.hero { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 36px; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+.hero h1 { margin: 0; font: 800 clamp(48px, 6.4vw, 88px)/.95 var(--round); color: var(--blue-deep); }
+.hero h1 span { display: block; margin-top: 14px; font: 700 clamp(18px, 2vw, 24px)/1.3 var(--sans); color: var(--ink-soft); }
+.live { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line);
+  font-weight: 800; text-decoration: none; color: var(--ink); }
+.live::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #2fbf57; box-shadow: 0 0 0 4px rgb(47 191 87 / .18); }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.stat .v { display: block; font: 800 32px/1 var(--round); color: var(--blue); }
+.stat .k { font-size: 14px; color: var(--muted); font-weight: 700; }
+.hero video { width: 100%; border-radius: 16px; display: block; background: #000; box-shadow: 0 18px 40px rgb(29 53 87 / .25); }
+.keys { font-size: 13px; color: var(--muted); margin-top: 22px; }
+kbd { font: 12px var(--mono); background: var(--card); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; }
+.refs { margin-top: 18px; font-size: 13px; color: var(--muted); }
+.refs a { color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="bar"><a class="brand" href="master.html#top"><svg class="tower" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 L24 13 H8 Z" fill="#2f5fa8"/><rect x="9.5" y="13" width="13" height="16" rx="1.5" fill="#c9d5e4" stroke="#1d3f78" stroke-width="1.5"/><path d="M14 29 V23 a2 2 0 0 1 4 0 V29" fill="#1d3f78"/><path d="M16 2 V-1" stroke="#a97a10" stroke-width="1.5"/><path d="M16 1 L21 2.5 L16 4" fill="#f6c84c"/></svg><i>Bramblekeep</i></a><div class="dots"><a href="#top" data-i="0">&#9873;</a><span class="lab">The game</span><a href="#run" data-i="1" class="" title="Bramblekeep">1</a><a href="#terra" data-i="2" class="" title="Why GPT 6.1 Terra">2</a><span class="lab">Features</span><a href="#heroes" data-i="3" class="" title="Three heroes">3</a><a href="#castle" data-i="4" class="" title="The castle fights back">4</a><a href="#online" data-i="5" class="" title="Online, with AI teammates">5</a><a href="#stack" data-i="6" class="" title="Colyseus and Wavedash">6</a><a href="#world" data-i="7" class="" title="A world that comes alive">7</a><span class="lab">Challenges</span><a href="#mockups" data-i="8" class="key" title="Finding the game">8</a><a href="#models" data-i="9" class="" title="3D models that came back wrong">9</a><a href="#animation" data-i="10" class="key" title="Animation that didn't behave">10</a><a href="#gameplay" data-i="11" class="" title="Gameplay that needed fixing">11</a><a href="#launch" data-i="12" class="" title="After launch">12</a><span class="lab">Tips</span><a href="#steer" data-i="13" class="key" title="How I steer the agent">13</a><a href="#assets" data-i="14" class="" title="Tips for models and animation">14</a><a href="#trailer" data-i="15" class="" title="Claude Code made the trailer">15</a></div></nav>
+<section class="slide hero" id="top">
+  <div>
+    <h1>Bramblekeep<span>An online castle game, built with GPT 6.1 Terra in Codex</span></h1>
+    <a class="live" href="https://wavedash.com/games/bramblekeep">Live on Wavedash</a>
+    <div class="stats">
+      <div class="stat"><span class="v">$0.68</span><span class="k">four rounds of mockups</span></div>
+      <div class="stat"><span class="v">6</span><span class="k">short prompts built the castle fight</span></div>
+      <div class="stat"><span class="v">3</span><span class="k">heroes, 4 enemy types, 1 boss</span></div>
+      <div class="stat"><span class="v">$0.0004</span><span class="k">to rank what to fix first</span></div>
+    </div>
+    <p class="keys"><kbd>&rarr;</kbd> next &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open the lesson &middot; <kbd>Esc</kbd> back here<br/>Jump: <kbd>1</kbd> The game &middot; <kbd>2</kbd> Features &middot; <kbd>3</kbd> Challenges &middot; <kbd>4</kbd> Tips &middot; <kbd>0</kbd> top</p>
+  </div>
+  <div class="stage"><video data-src="media/20261028-dev-highlight/bramblekeep-highlight-1080p.mp4" poster="media/20261028-master/posters/bramblekeep-highlight-1080p-mgv43w.jpg" muted loop playsinline preload="none" controls></video></div>
+</section>
+<section class="slide beat" id="run" data-sec="game"><div>
+    <span class="sec">The game</span>
+    <span class="num">1</span>
+    <h2>Bramblekeep</h2>
+    <p class="kicker">Storm the castle that grows back</p>
+    <ul class="points"><li>Pick a hero, leave camp</li><li>Break both levers, the gate falls</li><li>Beat the boss, the castle grows back</li></ul>
+    <a class="open" href="lesson-run.html">Lesson &middot; 10 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><div class="crop" style="--ar:2.3392"><video data-src="media/extra/trailer/20261028-gameplay/bramblekeep-gameplay-16x9.mp4" poster="media/20261028-master/posters/bramblekeep-gameplay-16x9-7sfre0.jpg" muted loop playsinline preload="none"></video></div></figure></div></section>
+<section class="slide beat" id="terra" data-sec="game"><div>
+    <span class="sec">The game</span>
+    <span class="num">2</span>
+    <h2>Why GPT 6.1 Terra</h2>
+    <p class="kicker">Not as smart as Opus 5.5. Much cheaper.</p>
+    <ul class="points"><li>Opus 5.5 scores higher: 58 vs 51</li><li>Terra costs a tenth as much per task</li><li>And it was good enough for this</li></ul>
+    <a class="open" href="lesson-terra.html">Lesson &middot; 8 slides <kbd>Enter</kbd></a>
+    <a class="open alt" href="https://artificialanalysis.ai/models/releases/gpt-6-1-terra" target="_blank" rel="noopener">Artificial Analysis &#8599;</a>
+  </div><div class="stage"><div class="v-compare"><table><thead><tr><th></th><th class="hi">GPT 6.1 Terra</th><th class="">Claude Opus 5.5</th></tr></thead><tbody><tr><td>Intelligence Index</td><td class="hi">51 (#12)</td><td class="">58 (#2)</td></tr><tr><td>Price per 1M tokens, in / out</td><td class="hi">$1 / $5</td><td class="">$4 / $20</td></tr><tr><td>Cost per task</td><td class="hi">$0.96</td><td class="">$10.04</td></tr><tr><td>Output tokens to run the index</td><td class="hi">99M</td><td class="">220M</td></tr><tr><td>Speed</td><td class="hi">91 tokens/s</td><td class="">98 tokens/s</td></tr></tbody></table><p>Artificial Analysis, October 2026</p></div></div></section>
+<section class="slide beat" id="heroes" data-sec="features"><div>
+    <span class="sec">Features</span>
+    <span class="num">3</span>
+    <h2>Three heroes</h2>
+    <p class="kicker">Each one plays differently</p>
+    <ul class="points"><li>Knight: a sword, up close</li><li>Scout: hold to draw, arrows stick</li><li>Spellcaster: orbs, and now healing</li></ul>
+    <a class="open" href="lesson-heroes.html">Lesson &middot; 7 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><video data-src="media/20261028-broll-gate-and-menu/broll/scout-charged-shots.mp4" poster="media/20261028-master/posters/scout-charged-shots-xt9rvj.jpg" muted loop playsinline preload="none"></video></figure></div></section>
+<section class="slide beat" id="castle" data-sec="features"><div>
+    <span class="sec">Features</span>
+    <span class="num">4</span>
+    <h2>The castle fights back</h2>
+    <p class="kicker">Levers, a falling gate, a boss</p>
+    <ul class="points"><li>Levers that repair themselves</li><li>Enemies from doors and hollow trees</li><li>A boss with a marked strike</li></ul>
+    <a class="open" href="lesson-castle.html">Lesson &middot; 8 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><video data-src="media/20261028-broll-gate-and-menu/broll/gate-levers-knight.mp4" poster="media/20261028-master/posters/gate-levers-knight-lfu43n.jpg" muted loop playsinline preload="none"></video></figure></div></section>
+<section class="slide beat" id="online" data-sec="features"><div>
+    <span class="sec">Features</span>
+    <span class="num">5</span>
+    <h2>Online, with AI teammates</h2>
+    <p class="kicker">Play alone and the server brings friends</p>
+    <ul class="points"><li>AI heroes fill the world</li><li>One shared day and night</li><li>Drop out, rejoin within 20 seconds</li></ul>
+    <a class="open" href="lesson-online.html">Lesson &middot; 5 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><div class="crop" style="--ar:2.3392"><video data-src="media/20261028-master/clips/coop-midday.mp4" poster="media/20261028-master/posters/coop-midday-53y0s9.jpg" muted loop playsinline preload="none"></video></div></figure></div></section>
+<section class="slide beat" id="stack" data-sec="features"><div>
+    <span class="sec">Features</span>
+    <span class="num">6</span>
+    <h2>Colyseus and Wavedash</h2>
+    <p class="kicker">How one castle is shared online</p>
+    <ul class="points"><li>Wavedash runs the game in your browser</li><li>One Colyseus server runs the castle</li><li>Playtest first, then publish</li></ul>
+    <a class="open" href="lesson-stack.html">Lesson &middot; 9 slides <kbd>Enter</kbd></a>
+    <a class="open alt" href="https://wavedash.com/games/bramblekeep" target="_blank" rel="noopener">Open it on Wavedash &#8599;</a>
+  </div><div class="stage"><ol class="v-flow"><li><b>Wavedash</b><span>The game, in your browser</span></li><li><b>Your login</b><span>A signed token says who you are</span></li><li><b>Colyseus</b><span>One server runs the castle</span></li><li><b>Everyone</b><span>Sees the same world</span></li></ol></div></section>
+<section class="slide beat" id="world" data-sec="features"><div>
+    <span class="sec">Features</span>
+    <span class="num">7</span>
+    <h2>A world that comes alive</h2>
+    <p class="kicker">Built in a test scene, then made the game</p>
+    <ul class="points"><li>A test scene with every look setting</li><li>Forest, river, fire, day and night</li><li>Then it became the main game</li></ul>
+    <a class="open" href="lesson-world.html">Lesson &middot; 8 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><video data-src="media/20261028-broll-world-combat/day-night-tour-1080p.mp4" poster="media/20261028-master/posters/day-night-tour-1080p-yh7jac.jpg" muted loop playsinline preload="none"></video></figure></div></section>
+<section class="slide beat is-key" id="mockups" data-sec="challenges"><div>
+    <span class="sec">Challenges</span>
+    <span class="num">8</span>
+    <h2>Finding the game</h2>
+    <p class="kicker">It was meant to be a castle defence game</p>
+    <ul class="points"><li>Four rounds of mockups, $0.68</li><li>&quot;they all look too fsimilar&quot;</li><li>Then one looked like we were attacking</li></ul>
+    <a class="open" href="lesson-mockups.html">Lesson &middot; 6 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><img src="media/20261027-world-defense/c-river.jpg" alt="" /></figure></div></section>
+<section class="slide beat" id="models" data-sec="challenges"><div>
+    <span class="sec">Challenges</span>
+    <span class="num">9</span>
+    <h2>3D models that came back wrong</h2>
+    <p class="kicker">Tripo made them, Blender scripts fixed them</p>
+    <ul class="points"><li>A sword with two hilts</li><li>A bow with an arrow fused on</li><li>A door that wouldn't open</li></ul>
+    <a class="open" href="lesson-models.html">Lesson &middot; 5 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><div class="v-pair" ><figure><img src="media/extra/tripo/2026-10-27-weapons/sword/preview.png" alt="Two hilts" /><figcaption><span class="tag before">Before</span>Two hilts</figcaption></figure><figure><img src="media/extra/tripo/2026-10-27-weapons/sword-v2/tripo-out/knight-sword-v2-fa4fdcf9/preview.png" alt="One sword" /><figcaption><span class="tag after">After</span>One sword</figcaption></figure></div></div></section>
+<section class="slide beat is-key" id="animation" data-sec="challenges"><div>
+    <span class="sec">Challenges</span>
+    <span class="num">10</span>
+    <h2>Animation that didn't behave</h2>
+    <p class="kicker">Tripo's clips, then fixes in Blender and code</p>
+    <ul class="points"><li>The slash was a wave and a bow</li><li>Snapping turns, &quot;walking is too fat&quot;</li><li>No finger bones</li></ul>
+    <a class="open" href="lesson-animation.html">Lesson &middot; 10 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><div class="v-row" style="--n:5"><figure><video data-src="media/20261027-kickoff/idle.mp4" poster="media/20261028-master/posters/idle-7fgxgn.jpg" muted loop playsinline preload="none"></video><figcaption>Idle</figcaption></figure><figure><video data-src="media/20261027-kickoff/walk.mp4" poster="media/20261028-master/posters/walk-306nle.jpg" muted loop playsinline preload="none"></video><figcaption>Walk</figcaption></figure><figure><video data-src="media/20261027-kickoff/run.mp4" poster="media/20261028-master/posters/run-y86ius.jpg" muted loop playsinline preload="none"></video><figcaption>Run</figcaption></figure><figure><video data-src="media/20261027-kickoff/jump.mp4" poster="media/20261028-master/posters/jump-ckghl9.jpg" muted loop playsinline preload="none"></video><figcaption>Jump</figcaption></figure><figure><video data-src="media/20261027-kickoff/attack.mp4" poster="media/20261028-master/posters/attack-84g0vn.jpg" muted loop playsinline preload="none"></video><figcaption>&quot;Slash&quot;</figcaption></figure></div></div></section>
+<section class="slide beat" id="gameplay" data-sec="challenges"><div>
+    <span class="sec">Challenges</span>
+    <span class="num">11</span>
+    <h2>Gameplay that needed fixing</h2>
+    <p class="kicker">I played it, said what felt wrong, it fixed it</p>
+    <ul class="points"><li>&quot;how do i attack?&quot;</li><li>A cutscene that froze you</li><li>A boss that died in a second</li></ul>
+    <a class="open" href="lesson-gameplay.html">Lesson &middot; 5 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><div class="v-pair" ><figure><img src="media/20261028-gate-levers/cinematic.jpg" alt="A cutscene took the controls" /><figcaption><span class="tag before">Before</span>A cutscene took the controls</figcaption></figure><figure><video data-src="media/20261028-broll-gate-and-menu/broll/gate-levers-knight.mp4" poster="media/20261028-master/posters/gate-levers-knight-lfu43n.jpg" muted loop playsinline preload="none"></video><figcaption><span class="tag after">After</span>It falls while you fight</figcaption></figure></div></div></section>
+<section class="slide beat" id="launch" data-sec="challenges"><div>
+    <span class="sec">Challenges</span>
+    <span class="num">12</span>
+    <h2>After launch</h2>
+    <p class="kicker">The boss went missing</p>
+    <ul class="points"><li>&quot;i played but don't see the boss there&quot;</li><li>It chased players out of the gate</li><li>One line to ship the fix</li></ul>
+    <a class="open" href="lesson-launch.html">Lesson &middot; 3 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><video data-src="media/20261028-broll-bramble-boss/broll/bramble-boss-finale-night.mp4" poster="media/20261028-master/posters/bramble-boss-finale-night-su9mbw.jpg" muted loop playsinline preload="none"></video></figure></div></section>
+<section class="slide beat is-key" id="steer" data-sec="tips"><div>
+    <span class="sec">Tips</span>
+    <span class="num">13</span>
+    <h2>How I steer the agent</h2>
+    <p class="kicker">What worked</p>
+    <ul class="points"><li>Four options, then I pick</li><li>Say what you see, not the fix</li><li>Ask what to fix first</li></ul>
+    <a class="open" href="lesson-steer.html">Lesson &middot; 7 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><ol class="v-route"><li>Start with the three skills</li><li>Four options, then I pick</li><li>A floor plan before a big map</li><li>Sub-agents in the background</li><li>Say what you see</li><li>&quot;jev it&quot; to pick what's next</li></ol></div></section>
+<section class="slide beat" id="assets" data-sec="tips"><div>
+    <span class="sec">Tips</span>
+    <span class="num">14</span>
+    <h2>Tips for models and animation</h2>
+    <p class="kicker">So you never pay for the same model twice</p>
+    <ul class="points"><li>A picture made for rigging</li><li>Keep the original, fix with a script</li><li>Reuse a model: the stump became the boss</li></ul>
+    <a class="open" href="lesson-assets.html">Lesson &middot; 5 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><img src="media/extra/game/art/characters/hero-knight/turnaround.jpg" alt="" /></figure></div></section>
+<section class="slide beat" id="trailer" data-sec="tips"><div>
+    <span class="sec">Tips</span>
+    <span class="num">15</span>
+    <h2>Claude Code made the trailer</h2>
+    <p class="kicker">GPT 6.1 Terra built the game. Claude Code filmed it.</p>
+    <ul class="points"><li>Filmed one frame at a time</li><li>Music cut on the beat</li><li>A fake Blender window, real renders</li></ul>
+    <a class="open" href="lesson-trailer.html">Lesson &middot; 4 slides <kbd>Enter</kbd></a>
+
+  </div><div class="stage"><figure class="v-one"><video data-src="media/20261028-dev-highlight/bramblekeep-highlight-1080p.mp4" poster="media/20261028-master/posters/bramblekeep-highlight-1080p-mgv43w.jpg" muted loop playsinline preload="none"></video></figure></div></section>
+<section class="slide end"><div>
+  <h2>Storm the castle that grows back</h2>
+  <p class="play"><a href="https://wavedash.com/games/bramblekeep">wavedash.com/games/bramblekeep</a></p>
+  <p class="refs">The build, step by step: <a href="../prompts/INDEX.md">prompts</a> and <a href="../learnings/INDEX.md">learnings</a></p>
+</div></section>
+<script>
+(() => {
+  const cfg = {"jump":{"1":1,"2":3,"3":8,"4":13}};
+  // ?video: the picture for the stitched video (no navigation, room for the face circle bottom left)
+  if (new URLSearchParams(location.search).has("video")) document.body.classList.add("video");
+  const slides = [...document.querySelectorAll(".slide")];
+  const dots = [...document.querySelectorAll(".dots a")];
+  let cur = 0;
+  const go = (i) => {
+    if (i >= slides.length) { if (cfg.after) location.href = cfg.after; return; }
+    if (i < 0) { if (cfg.before) location.href = cfg.before; return; }
+    slides[i].scrollIntoView({ block: "start" });
+  };
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) {
+      cur = slides.indexOf(e.target);
+      dots.forEach((d) => d.classList.toggle("on", d.dataset.i == cur));
+      if (e.target.id) history.replaceState(null, "", "#" + e.target.id);
+    }
+  }, { threshold: 0.6 });
+  slides.forEach((x) => io.observe(x));
+
+  // Videos load and play only while on screen.
+  const vio = new IntersectionObserver((es) => {
+    for (const e of es) {
+      const v = e.target;
+      if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else if (!v.paused) v.pause();
+    }
+  }, { threshold: 0.3 });
+  document.querySelectorAll("video[data-src]").forEach((v) => vio.observe(v));
+  document.querySelectorAll("[data-vpair]").forEach((p) => {
+    const [a, b] = p.querySelectorAll("video");
+    a.addEventListener("play", () => { b.currentTime = a.currentTime; b.play().catch(() => {}); });
+  });
+
+  addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === "ArrowRight" || k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(cur + 1); }
+    else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(cur - 1); }
+    else if (k === "Enter") { const a = slides[cur].querySelector("a.open"); if (a) location.href = a.href; }
+    else if (k === "Escape" && cfg.back) location.href = cfg.back;
+    else if (k === "0" && cfg.jump) go(0);
+    else if (cfg.jump && cfg.jump[k] !== undefined) go(cfg.jump[k]);
+  });
+})();
+</script>
+</body>
+</html>

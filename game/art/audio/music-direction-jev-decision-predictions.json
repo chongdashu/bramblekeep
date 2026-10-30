@@ -1,0 +1,36 @@
+{
+  "provenance": {
+    "mode": "live",
+    "requested_model": "jev-1.14.0",
+    "requests_attempted": 1,
+    "retries": 0,
+    "recorded_at": "2026-10-28T05:26:18.927588+00:00"
+  },
+  "records": [
+    {
+      "id": "castle-request",
+      "request_sha256": "0dd0330e3064470d247c5093786e689ff82f37155edbde7dd5c04a784db82d84",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "direction": {
+            "type": "choice",
+            "choice": "dark_adventure",
+            "confidence": 0.96,
+            "probabilities": {
+              "dark_adventure": 0.97,
+              "war_march": 0.01,
+              "storybook": 0.0,
+              "unknown": 0.02
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 703,
+          "output_tokens": 53
+        }
+      },
+      "latency_ms": 341.911
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+import { schema, t, type SchemaType } from '@colyseus/schema';
+
+export const PlayerState=schema({name:t.string(),x:t.float32(),z:t.float32(),yaw:t.float32(),health:t.number(),respawnRemaining:t.float32(),kills:t.number(),wonRound:t.number(),classId:t.string(),connected:t.boolean(),drawProgress:t.float32(),attackSeq:t.number(),healCooldown:t.float32(),healSeq:t.uint32(),lastSeq:t.int32()},'PlayerState');
+export const EnemyState=schema({x:t.float32(),z:t.float32(),yaw:t.float32(),hp:t.number(),maxHp:t.number(),alive:t.boolean(),type:t.number(),moving:t.boolean(),hitFlash:t.float32(),attackCue:t.float32(),attackSeq:t.uint32(),windup:t.float32(),gait:t.float32()},'EnemyState');
+export const ProjectileState=schema({x:t.float32(),z:t.float32(),dx:t.float32(),dz:t.float32(),kind:t.string()},'ProjectileState');
+export const ScoreState=schema({name:t.string(),classId:t.string(),kills:t.number(),connected:t.boolean()},'ScoreState');
+export const ActivityState=schema({actorId:t.string(),kind:t.string(),name:t.string(),text:t.string(),sentAt:t.float64()},'ActivityState');
+export const CastleState=schema({players:t.map(PlayerState),scores:t.map(ScoreState),victoryScores:t.map(ScoreState),victoryRemaining:t.uint8(),activity:t.map(ActivityState),enemies:t.map(EnemyState),projectiles:t.map(ProjectileState),tick:t.uint32(),worldSeconds:t.uint32(),round:t.number(),defeats:t.number(),leverLeft:t.float32(),leverRight:t.float32(),leverLeftHits:t.uint32(),leverRightHits:t.uint32(),gateRemaining:t.float32(),coreHealth:t.number(),guardianX:t.float32(),guardianZ:t.float32(),guardianYaw:t.float32(),guardianPhase:t.uint8(),guardianEmerge:t.float32(),guardianWindup:t.float32(),guardianAttack:t.float32(),guardianGait:t.float32(),guardianMoving:t.boolean(),gateOpen:t.boolean(),cleared:t.boolean(),night:t.boolean()},'CastleState');
+export type CastleState=SchemaType<typeof CastleState>;

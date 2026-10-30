@@ -1,0 +1,3 @@
+Generated with the built-in ImageGen tool from a real gameplay screenshot. Prompt: preserve the camera, guardian tree character, knight, floor emblem, enemy doors and existing walls; add no castle or obstacles in combat lanes. Develop fitted stonework, articulated portal arches, warm torchlight, blue-and-gold banners, low flowering edges, ivy and a worn stone floor. Keep the game UI unchanged.
+
+The image is a visual target rather than gameplay. ImageGen preserves the view approximately but does not give calibrated camera data.

@@ -1,0 +1,611 @@
+{
+  "provenance": {
+    "mode": "live",
+    "requested_model": "jev-1.14.0",
+    "requests_attempted": 12,
+    "retries": 0,
+    "recorded_at": "2026-10-28T08:44:20.209141+00:00"
+  },
+  "records": [
+    {
+      "id": "combat",
+      "request_sha256": "fc6dd66e01a6ef280c92ed2ab5bfc28cad44a4933331286a15ac79f25f2053f7",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 2.29,
+            "confidence": 0.48,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.09,
+              "2": 0.49,
+              "3": 0.41
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.88,
+            "confidence": 0.83,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.0,
+              "1": 0.11,
+              "2": 0.89
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.95
+          }
+        },
+        "usage": {
+          "input_tokens": 879,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 671.725
+    },
+    {
+      "id": "encounter",
+      "request_sha256": "ebd3d5750e203a09e57773aade99786a5449f47ae429ccef0ea47704f6e06b49",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 2.54,
+            "confidence": 0.53,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.05,
+              "2": 0.34,
+              "3": 0.6
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.77,
+            "confidence": 0.67,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.0,
+              "1": 0.22,
+              "2": 0.78
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.95
+          }
+        },
+        "usage": {
+          "input_tokens": 873,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 322.435
+    },
+    {
+      "id": "return",
+      "request_sha256": "253be31bf599350695159a9d43da7d7182faf9036ff33dd28a024f5b0f271d63",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 2.02,
+            "confidence": 0.43,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.21,
+              "2": 0.46,
+              "3": 0.3
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.81,
+            "confidence": 0.71,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.17,
+              "2": 0.82
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.8
+          }
+        },
+        "usage": {
+          "input_tokens": 891,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 298.959
+    },
+    {
+      "id": "onboarding",
+      "request_sha256": "4f75518f76a555ddb36b87219cfcc0dd5c12d0b72de9e7fe1ad26c41f78e7e22",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 1.82,
+            "confidence": 0.51,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.27,
+              "2": 0.54,
+              "3": 0.16
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 2.0,
+            "confidence": 1.0,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.0,
+              "1": 0.0,
+              "2": 1.0
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.99
+          }
+        },
+        "usage": {
+          "input_tokens": 865,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 348.672
+    },
+    {
+      "id": "population",
+      "request_sha256": "8743c22f22cafda6a7d5091f3341d39b1ece83a2876661d60732c7bf2392cadf",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 2.08,
+            "confidence": 0.08,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.13,
+              "1": 0.14,
+              "2": 0.25,
+              "3": 0.48
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.63,
+            "confidence": 0.46,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.3,
+              "2": 0.67
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.97
+          }
+        },
+        "usage": {
+          "input_tokens": 881,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 325.368
+    },
+    {
+      "id": "social",
+      "request_sha256": "f0ba439414178e8c087386b0d4214192c59c2fe3798028ead0c090ecccef0e70",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 1.93,
+            "confidence": 0.47,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.03,
+              "1": 0.24,
+              "2": 0.5,
+              "3": 0.23
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.7,
+            "confidence": 0.55,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.28,
+              "2": 0.71
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.94
+          }
+        },
+        "usage": {
+          "input_tokens": 858,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 317.708
+    },
+    {
+      "id": "world",
+      "request_sha256": "0e7fbb8b8e24ce2a08371b61d5ae28338da3ea85e043889d4a0e06b9f79b42be",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 0.02,
+            "confidence": 0.99,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.99,
+              "1": 0.01,
+              "2": 0.0,
+              "3": 0.0
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 0.15,
+            "confidence": 0.78,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.85,
+              "1": 0.15,
+              "2": 0.0
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.6
+          }
+        },
+        "usage": {
+          "input_tokens": 860,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 316.626
+    },
+    {
+      "id": "polish",
+      "request_sha256": "32cbb26c278c651e8dd480e32c7cdcae81d78bb93bb004c2713f2c6c018ed224",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 0.47,
+            "confidence": 0.54,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.55,
+              "1": 0.44,
+              "2": 0.01,
+              "3": 0.0
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 0.91,
+            "confidence": 0.51,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.21,
+              "1": 0.67,
+              "2": 0.12
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.96
+          }
+        },
+        "usage": {
+          "input_tokens": 856,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 295.753
+    },
+    {
+      "id": "reliability",
+      "request_sha256": "0ba756a2b09eb4e2c3ebc5c47ede09e5e1a3bbbe1ba527fb780304887652e251",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 1.81,
+            "confidence": 0.0,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.13,
+              "1": 0.28,
+              "2": 0.23,
+              "3": 0.36
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.52,
+            "confidence": 0.28,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.12,
+              "1": 0.24,
+              "2": 0.64
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.96
+          }
+        },
+        "usage": {
+          "input_tokens": 878,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 318.677
+    },
+    {
+      "id": "smoke-central",
+      "request_sha256": "32bfd34bf18059b4a2a1d4b1357df07dfbdd9297e61a48c7cf2a399c2a62e52f",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 2.75,
+            "confidence": 0.75,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.01,
+              "1": 0.03,
+              "2": 0.16,
+              "3": 0.8
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 1.82,
+            "confidence": 0.73,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.04,
+              "1": 0.1,
+              "2": 0.86
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.94
+          }
+        },
+        "usage": {
+          "input_tokens": 684,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 314.92
+    },
+    {
+      "id": "smoke-vanity",
+      "request_sha256": "6a43a6cf3cb57ed2144e7556ab24dacad11daa115f87836a605caf5e3c884b2d",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 0.0,
+            "confidence": 1.0,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 1.0,
+              "1": 0.0,
+              "2": 0.0,
+              "3": 0.0
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 0.56,
+            "confidence": 0.16,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 0.48,
+              "1": 0.48,
+              "2": 0.04
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.03
+          }
+        },
+        "usage": {
+          "input_tokens": 680,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 531.202
+    },
+    {
+      "id": "smoke-unknown",
+      "request_sha256": "c8f247f8ab812f9727013e8c67dd46289937021b61a85c3c3b59ff166af1992f",
+      "response": {
+        "model": "jev-1.14.0",
+        "answers": {
+          "loop_impact": {
+            "type": "score",
+            "score": 0.02,
+            "confidence": 0.99,
+            "legend": {
+              "0": "Little direct effect on the core loop, or outside the requested first-release scope.",
+              "1": "Helpful to part of the experience, but the loop could be evaluated without it.",
+              "2": "Directly improves or completes an important repeated phase of the loop.",
+              "3": "Closes a critical weakness in repeated play or its satisfying completion, across common sessions."
+            },
+            "probabilities": {
+              "0": 0.99,
+              "1": 0.01,
+              "2": 0.0,
+              "3": 0.0
+            }
+          },
+          "v1_fit": {
+            "type": "score",
+            "score": 0.01,
+            "confidence": 1.0,
+            "legend": {
+              "0": "Requires a broad unbounded new platform, large content program, or an unspecified dependency.",
+              "1": "Can be scoped, but requires several substantial unproven subsystems or extensive new content.",
+              "2": "Builds on existing systems with a small, specific, testable extension."
+            },
+            "probabilities": {
+              "0": 1.0,
+              "1": 0.0,
+              "2": 0.0
+            }
+          },
+          "user_signal": {
+            "type": "noul",
+            "noul": 0.02
+          }
+        },
+        "usage": {
+          "input_tokens": 665,
+          "output_tokens": 51
+        }
+      },
+      "latency_ms": 331.185
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+.caster-spells { position:fixed; z-index:8; right:calc(14px + env(safe-area-inset-right)); bottom:calc(86px + env(safe-area-inset-bottom)); display:flex; gap:6px; pointer-events:auto; }
+.caster-spells[hidden] { display:none; }
+.caster-spells button { min-width:86px; min-height:46px; border:2px solid #a6bfc8; border-radius:12px; color:#f7f4df; background:#203d56ee; font:700 14px system-ui,sans-serif; box-shadow:0 3px 0 #132b3e; touch-action:manipulation; }
+.caster-spells button[aria-pressed="true"] { border-color:#ffe08a; background:#426b83; box-shadow:0 0 0 2px #fbd77c88,0 3px 0 #132b3e; }
+.caster-spells button[data-spell="heal"][aria-pressed="true"] { background:#28775f; }
+.caster-spells button span { font-size:18px; color:#bbf4d0; }
+.caster-spells button small { margin-left:2px; opacity:.75; }
+.caster-spells button em { display:inline-block; padding-left:3px; font-style:normal; color:#ffe09d; }
+.caster-spells-hint { position:absolute; bottom:100%; right:0; white-space:nowrap; color:#fff5d7; padding:3px 5px; text-shadow:0 2px 4px #122032; font:600 11px system-ui,sans-serif; }
+body.castle-play .touch-btn[data-action="attack"][data-cast="heal"] { background:#267f61; border:3px solid #c5f4d2; border-radius:50%; box-shadow:0 5px 0 #174d3e; }
+body.castle-play .touch-btn[data-action="attack"][data-cast="heal"] span { position:static; width:auto; height:auto; clip-path:none; overflow:visible; font-size:14px; color:white; }
+body.castle-play .touch-btn[data-action="attack"][data-cast="heal"] span::before { content:'✚'; display:block; font-size:25px; }
+@media(pointer:coarse){.caster-spells { right:calc(140px + env(safe-area-inset-right)); bottom:calc(152px + env(safe-area-inset-bottom)); }.caster-spells button small{display:none}.caster-spells-hint{display:none}}
+body[data-mobile-preview="true"] .caster-spells { right:calc(140px + env(safe-area-inset-right)); bottom:calc(152px + env(safe-area-inset-bottom)); }
+body[data-mobile-preview="true"] .caster-spells-hint { display:none; }
+@media(max-height:400px){.caster-spells { bottom:calc(70px + env(safe-area-inset-bottom)); }.caster-spells-hint{display:none}.caster-spells button{min-height:40px}}
+
+@media(pointer:coarse) and (min-height:451px) { body.multiplayer-play:has(.caster-spells:not([hidden])) .chat-panel { bottom:calc(235px + env(safe-area-inset-bottom)); } }
+@media(min-height:451px) { body[data-mobile-preview="true"].multiplayer-play:has(.caster-spells:not([hidden])) .chat-panel { bottom:calc(235px + env(safe-area-inset-bottom)); } }
+@media(max-height:450px) { body[data-mobile-preview="true"] .caster-spells { right:calc(140px + env(safe-area-inset-right)); bottom:calc(115px + env(safe-area-inset-bottom)); } }

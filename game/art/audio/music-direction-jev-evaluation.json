@@ -1,0 +1,124 @@
+{
+  "created_at": "2026-10-28T05:26:16.014460+00:00",
+  "suite": "castle-assault-music-direction",
+  "version": "1",
+  "questions_sha256": "b9f9095cce89401296736226a288c69b1db6a63a326d76bdb0e1da6c446c51b1",
+  "provenance": {
+    "mode": "live",
+    "requested_model": "jev-1.14.0",
+    "requests_attempted": 3,
+    "retries": 0,
+    "recorded_at": "2026-10-28T05:26:16.013925+00:00"
+  },
+  "models": [
+    "jev-1.14.0"
+  ],
+  "summary": {
+    "cases": 3,
+    "passed": 3,
+    "failed": 0,
+    "error": 0,
+    "unlabeled": 0,
+    "all_passed": true
+  },
+  "metrics": {
+    "direction": {
+      "type": "choice",
+      "compared": 3,
+      "passed": 3,
+      "agreement": 1.0
+    }
+  },
+  "latency_ms": {
+    "samples": 3,
+    "p50": 469.788,
+    "p95": 1323.948
+  },
+  "usage": {
+    "input_tokens": 1683,
+    "output_tokens": 152
+  },
+  "cases": [
+    {
+      "id": "storybook-preference",
+      "request_sha256": "fb80574ef4f6213cb9a0aab2a14d733e9c43967be01f1b2aa122e94ba1e38d9e",
+      "latency_ms": 469.788,
+      "status": "passed",
+      "model": "jev-1.14.0",
+      "answers": {
+        "direction": {
+          "type": "choice",
+          "choice": "storybook",
+          "confidence": 0.85,
+          "probabilities": {
+            "dark_adventure": 0.0,
+            "war_march": 0.0,
+            "storybook": 0.89,
+            "unknown": 0.11
+          }
+        }
+      },
+      "checks": {
+        "direction": {
+          "passed": true,
+          "actual": "storybook",
+          "expected": "storybook"
+        }
+      }
+    },
+    {
+      "id": "martial-preference",
+      "request_sha256": "3caae3664e0fe44e9504fae4f8ab81a3a4c96fce377e89107b4fe6ac3770a35d",
+      "latency_ms": 395.271,
+      "status": "passed",
+      "model": "jev-1.14.0",
+      "answers": {
+        "direction": {
+          "type": "choice",
+          "choice": "war_march",
+          "confidence": 1.0,
+          "probabilities": {
+            "dark_adventure": 0.0,
+            "war_march": 1.0,
+            "storybook": 0.0,
+            "unknown": 0.0
+          }
+        }
+      },
+      "checks": {
+        "direction": {
+          "passed": true,
+          "actual": "war_march",
+          "expected": "war_march"
+        }
+      }
+    },
+    {
+      "id": "no-preference",
+      "request_sha256": "9e9b06b8689a4ad3b8e788fd0c27f693fc795de54b39f48d30a2e3b773d9994f",
+      "latency_ms": 1323.948,
+      "status": "passed",
+      "model": "jev-1.14.0",
+      "answers": {
+        "direction": {
+          "type": "choice",
+          "choice": "unknown",
+          "confidence": 1.0,
+          "probabilities": {
+            "dark_adventure": 0.0,
+            "war_march": 0.0,
+            "storybook": 0.0,
+            "unknown": 1.0
+          }
+        }
+      },
+      "checks": {
+        "direction": {
+          "passed": true,
+          "actual": "unknown",
+          "expected": "unknown"
+        }
+      }
+    }
+  ]
+}

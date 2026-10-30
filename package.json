@@ -1,0 +1,53 @@
+{
+  "name": "bramblekeep",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Bramblekeep: a persistent multiplayer castle-assault game for the browser. Rust/WASM simulation, direct WebGPU and WebGL 2 rendering, a Colyseus world server.",
+  "engines": {
+    "node": ">=22.4"
+  },
+  "scripts": {
+    "wasm": "node scripts/build-wasm.mjs",
+    "dev": "npm run wasm && vite",
+    "play": "node --env-file-if-exists=.env.local game/server/play.mjs",
+    "dev:world": "node --env-file-if-exists=.env.local game/server/dev-world.mjs",
+    "typecheck:world": "tsc -p game/server/tsconfig.json",
+    "test:multiplayer": "node --import tsx game/tests/multiplayer-victory-browser.mjs",
+    "dev:https": "npm run wasm && vite --mode https",
+    "build": "npm run wasm && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "cargo test --workspace",
+    "test:game": "npm run wasm && vitest run",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node tests/smoke.mjs",
+    "test:graphics": "node tests/graphics.mjs",
+    "package:web": "node scripts/package-web.mjs",
+    "package:wavedash": "node scripts/package-wavedash.mjs",
+    "package:crazygames": "node scripts/package-crazygames.mjs",
+    "serve:release": "node scripts/serve-release.mjs",
+    "test:release": "node --test \"tests/release/*.test.mjs\"",
+    "assets": "node scripts/game-command.mjs assets",
+    "verify:assets": "node scripts/game-command.mjs verifyAssets",
+    "game": "node scripts/game-command.mjs",
+    "test:frontend": "npm run wasm && node tests/frontend.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "@vitejs/plugin-basic-ssl": "2.3.0",
+    "@webgpu/types": "0.1.74",
+    "convex": "^1.48.0",
+    "convex-test": "^0.0.66",
+    "tsx": "^4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  },
+  "dependencies": {
+    "@colyseus/core": "^0.18.10",
+    "@colyseus/schema": "^5.0.42",
+    "@colyseus/sdk": "^0.18.8",
+    "@colyseus/ws-transport": "^0.18.4",
+    "jose": "^6.2.13"
+  }
+}

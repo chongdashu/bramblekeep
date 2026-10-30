@@ -1,0 +1,151 @@
+/* Stills captured from the environment's castle viewpoint, with overlays hidden. */
+body[data-scene="gym"] #menu { background: linear-gradient(90deg,rgba(17,40,70,.75),rgba(17,40,70,.22) 45%,transparent 75%), url('/assets/ui/world-wide.webp') center / cover; }
+@media (max-aspect-ratio: 9/10) {
+  body[data-scene="gym"] #menu { background: linear-gradient(180deg,rgba(17,40,70,.48),transparent 32%,rgba(17,40,70,.7)), url('/assets/ui/world-portrait.webp') center / cover; }
+}
+/* Choices settle like game pieces and respond as physical controls. */
+#menu .mbtn, .multiplayer-classes button { transition: transform 180ms cubic-bezier(.2,1.4,.4,1), filter 160ms, box-shadow 160ms, border-color 160ms; }
+#menu .mbtn:hover, #menu .mbtn:focus-visible, .multiplayer-classes button:hover, .multiplayer-classes button:focus-visible { transform: translateY(-3px) scale(1.025); filter: brightness(1.12); }
+#menu .mbtn:active, .multiplayer-classes button:active { transform: translateY(3px) scale(.96); }
+#menu .scene-link:not([hidden]) { animation: choice-arrive 300ms cubic-bezier(.2,1.4,.4,1) both; }
+#menu .scene-link:nth-of-type(2n) { animation-delay: 35ms; }
+.multiplayer-card { animation: tray-arrive 400ms cubic-bezier(.2,1.25,.4,1) both; }
+.multiplayer-classes button { position:relative; min-height:130px; border:3px solid #b4dafa; border-radius:20px; box-shadow:inset 0 3px rgba(255,255,255,.24), 0 5px 0 #1f4678, 0 9px 16px #142c4b80; animation:choice-arrive 430ms cubic-bezier(.2,1.4,.4,1) both; }
+.multiplayer-classes button:nth-child(2) { background:linear-gradient(#a880d9,#7043a5); border-color:#e1c8ff; animation-delay:70ms; }
+.multiplayer-classes button:nth-child(3) { background:linear-gradient(#83b978,#40845c); border-color:#cdebb5; animation-delay:140ms; }
+.multiplayer-classes b { font-weight:900; text-shadow:0 2px 0 #1d335c80; }
+@keyframes choice-arrive { from { opacity:0; transform:translateY(18px) scale(.88); } to { opacity:1; transform:none; } }
+@keyframes tray-arrive { from { opacity:0; transform:translateY(28px) scale(.94); } to { opacity:1; transform:none; } }
+@media (max-width:500px) { .multiplayer-classes button { min-height:62px; } }
+body.reduced-motion #menu .mbtn, body.reduced-motion .multiplayer-card, body.reduced-motion .multiplayer-classes button { animation:none; transition:none; }
+@media (prefers-reduced-motion:reduce) { #menu .scene-link:not([hidden]), .multiplayer-card, .multiplayer-classes button { animation:none; } }
+
+/* The canvas is the menu backdrop: a fixed camera in the actual world. */
+@font-face { font-family: 'Baloo'; src: url('/assets/ui/fonts/Baloo2.woff2') format('woff2'); font-weight: 400 800; font-display: swap; }
+:root { --display: 'Baloo', ui-rounded, system-ui, sans-serif; }
+body[data-scene="gym"] #menu { background: linear-gradient(180deg, rgba(8,23,38,.42), rgba(8,23,38,.2) 48%, rgba(8,23,38,.66)); place-items: center; padding: calc(16px + var(--safe-t)) calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) calc(16px + var(--safe-l)); }
+body[data-scene="gym"] #menu .menu-col { justify-self:center; align-self:center; width:min(340px,100%); gap:16px; text-align:center; }
+body[data-scene="gym"] #menu .logo { font: 800 clamp(42px, 7vmin, 68px)/.92 var(--display); letter-spacing:-.025em; color:#fff7d9; -webkit-text-stroke:0; text-shadow:0 3px 0 #36547a, 0 6px 0 #182c4b, 0 9px 22px #081727b3; }
+body[data-scene="gym"] #menu .menu-list { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+body[data-scene="gym"] #menu .menu-list .mbtn { font-family:var(--display); font-weight:700; line-height:1.05; }
+body[data-scene="gym"] #menu .menu-foot { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); }
+.multiplayer-join { background:rgba(8,19,30,.62); }
+.multiplayer-card { width:min(760px,100%); padding:24px 28px 20px; border:2px solid #d6bf83; border-radius:24px; background:linear-gradient(160deg,rgba(31,53,75,.97),rgba(19,34,55,.98)); box-shadow:inset 0 0 0 4px #ffffff0d, 0 14px 35px #06131ca6; }
+.multiplayer-card h1 { color:#fff4ce; font:800 clamp(27px,4vw,42px)/1 var(--display); text-shadow:0 3px #142a47; margin:0; }
+.multiplayer-card p { font:500 15px/1.25 var(--display); margin:4px 0 16px; color:#d9e6f1; }
+.multiplayer-classes { gap:12px; }
+.multiplayer-classes button { overflow:hidden; min-height:255px; padding:150px 8px 12px; border-radius:18px; border:2px solid #a8ceeb; background:linear-gradient(#659dd2,#315e99); box-shadow:inset 0 2px #ffffff52,0 5px #162e50,0 8px 16px #09152180; }
+.multiplayer-classes button::before { content:""; position:absolute; inset:0 0 72px; background-position:center 13%; background-size:contain; background-repeat:no-repeat; pointer-events:none; filter:drop-shadow(0 5px 5px #14233766); }
+.multiplayer-classes button[data-class="Knight"]::before { background-image:url('/assets/ui/hero-knight.webp'); }
+.multiplayer-classes button[data-class="Spellcaster"]::before { background-image:url('/assets/ui/hero-spellcaster.webp'); }
+.multiplayer-classes button[data-class="Scout"]::before { background-image:url('/assets/ui/hero-scout.webp'); }
+.multiplayer-classes button:nth-child(2) { background:linear-gradient(#a47ac6,#633f8c); }
+.multiplayer-classes button:nth-child(3) { background:linear-gradient(#88aa76,#416c4c); }
+.multiplayer-classes b { position:relative; font:800 24px/1 var(--display); text-shadow:0 2px #132840aa; }
+.multiplayer-classes span { position:relative; font:500 14px/1.1 var(--display); }
+.multiplayer-card .multiplayer-message { margin:12px 0 4px; }
+.multiplayer-back { font:700 15px var(--display); color:#f9e5ab; }
+@media (max-aspect-ratio:9/10) {
+  body[data-scene="gym"] #menu { background:linear-gradient(180deg,rgba(8,23,38,.46),rgba(8,23,38,.16) 50%,rgba(8,23,38,.7)); }
+  body[data-scene="gym"] #menu .menu-col { align-self:center; grid-template-rows:auto auto; width:min(340px,100%); }
+  body[data-scene="gym"] #menu .menu-list { grid-row:auto; }
+}
+@media (max-width:500px) {
+  .multiplayer-card { padding:18px 16px 12px; }
+  .multiplayer-classes { grid-template-columns:1fr; gap:8px; }
+  .multiplayer-classes button { min-height:82px; padding:14px 10px 10px 92px; text-align:left; }
+  .multiplayer-classes button::before { inset:0 auto 0 2px; width:85px; background-position:center top; }
+  .multiplayer-classes b { font-size:20px; }
+}
+@media (max-height:400px) {
+  body[data-scene="gym"] #menu .menu-col { gap:5px; width:min(340px,100%); }
+  body[data-scene="gym"] #menu .logo { font-size:30px; }
+  body[data-scene="gym"] #menu .menu-list .mbtn.primary { min-height:40px; }
+  .multiplayer-card { padding:12px 18px; }
+  .multiplayer-card h1 { font-size:25px; }
+  .multiplayer-card p { margin:2px 0 6px; }
+  .multiplayer-classes { grid-template-columns:repeat(3,1fr); }
+  .multiplayer-classes button { min-height:125px; padding:78px 5px 6px; text-align:center; }
+  .multiplayer-classes button::before { inset:0 0 40px; width:auto; }
+  .multiplayer-classes b { font-size:17px; }
+  .multiplayer-classes span { font-size:11px; }
+}
+
+/* Compact objective and lever markers inspired by the game's blue-and-gold kit. */
+body.castle-play #hud-top { gap:7px; }
+body.castle-play #hud-top .pill { height:38px; padding:0 12px; border:2px solid #d4b870; border-radius:10px; background:linear-gradient(180deg,#345b81eb,#1c3657ed); box-shadow:inset 0 1px #ffffff35,0 3px #12243c,0 5px 12px #08182555; color:#fff5db; font:700 15px/1 var(--display); }
+body.castle-play #gym-health { color:#ffe7d9; }
+body.castle-play .gym-note { border:1px solid #d4b870; border-radius:10px; background:#1c3657e8; box-shadow:0 3px #12243c,0 5px 12px #08182555; color:#fff5da; font:600 13px/1.2 var(--display); }
+.lever-tracker { position:fixed; top:calc(57px + var(--safe-t)); left:calc(12px + var(--safe-l)); z-index:5; display:flex; align-items:center; gap:6px; padding:5px 7px; border:1px solid #c7a966; border-radius:9px; background:#172d49eb; box-shadow:0 3px #10213a,0 5px 10px #0004; color:#fcecc4; font:700 13px/1 var(--display); pointer-events:none; }
+.lever-tracker-title { font-size:10px; letter-spacing:.06em; padding:0 3px; }
+.lever-tracker-side { display:inline-flex; align-items:center; gap:5px; padding:4px 6px; border-radius:5px; background:#3c779b; color:white; white-space:nowrap; }
+.lever-tracker-side b { display:grid; place-items:center; width:15px; height:15px; border-radius:50%; background:#193d60; color:#ffe093; font:800 11px/1 var(--display); }
+.lever-tracker-side[data-down="true"] { background:#a36636; color:#fff1c8; }
+.lever-marker { position:fixed; z-index:5; width:24px; height:24px; translate:-50% -50%; rotate:45deg; border:2px solid #ffe093; border-radius:4px; background:linear-gradient(135deg,#68dbef,#2385b0); box-shadow:0 2px 9px #152a40aa; pointer-events:none; }
+.lever-marker::after { content:""; position:absolute; right:-8px; bottom:-8px; width:6px; height:6px; border-right:2px solid #ffe093; border-bottom:2px solid #ffe093; }
+.lever-marker i { display:grid; place-items:center; width:100%; height:100%; rotate:-45deg; font:800 12px/1 var(--display); font-style:normal; color:#fff; text-shadow:0 1px 2px #174a66; }
+.lever-marker[data-down="true"] { background:linear-gradient(135deg,#ffd171,#bf7230); }
+@media (pointer:coarse) { .lever-tracker { top:calc(54px + var(--safe-t)); } body.castle-play .gym-note { top:calc(91px + var(--safe-t)); font-size:11px; } }
+@media (max-height:400px) and (min-aspect-ratio:1/1) { .lever-tracker { top:calc(48px + var(--safe-t)); } body.castle-play .gym-note { top:auto; bottom:calc(8px + var(--safe-b)); } }
+
+/* Keep player actions prominent and the development destinations visibly secondary. */
+body[data-scene="gym"] #menu .menu-list { max-height:calc(100dvh - 150px - var(--safe-t) - var(--safe-b)); overflow-y:auto; overscroll-behavior:contain; touch-action:pan-y; padding:4px 5px 10px; }
+body[data-scene="gym"] #menu .menu-list [data-act="settings"] { grid-column:1 / -1; background:linear-gradient(#569ca3,#326b78); border-color:#acd8d5; box-shadow:inset 0 2px #ffffff45,0 4px #204651,0 7px 12px #0e233b55; }
+body[data-scene="gym"] #menu .menu-list [data-act="settings"]:is(:hover,:focus-visible,.sel) { background:linear-gradient(#70b6ba,#408994); border-color:#e0ffff; }
+body[data-scene="gym"] #menu .scene-toggle { margin-top:18px; color:#e4eaf2; background:linear-gradient(#596c7d,#3a4b5d); border-color:#99adba; box-shadow:inset 0 2px #ffffff28,0 4px #23333f; }
+body[data-scene="gym"] #menu .scene-toggle:is(:hover,:focus-visible,.sel), body[data-scene="gym"] #menu .scene-link:is(:hover,:focus-visible,.sel) { background:linear-gradient(#71899c,#50697a); border-color:#d8e9ef; }
+body[data-scene="gym"] #menu .scene-link { background:linear-gradient(#526a7b,#364d60); border-color:#91a9b4; color:#f0f5f5; }
+body[data-scene="gym"] #menu .menu-list .mbtn.dev { grid-column:1 / -1; margin-top:12px; min-height:40px; color:#f3eaff; background:linear-gradient(#765b89,#513a6b); border:2px dashed #c8add8; box-shadow:inset 0 2px #ffffff27,0 3px #372b4b; opacity:1; }
+body[data-scene="gym"] #menu .menu-list .mbtn.dev:is(:hover,:focus-visible,.sel) { background:linear-gradient(#9272a5,#694c83); border-color:#f5e1ff; }
+@media (max-height:400px) {
+  body[data-scene="gym"] #menu .menu-list { max-height:calc(100dvh - 70px - var(--safe-t) - var(--safe-b)); padding:3px 5px 8px; }
+  body[data-scene="gym"] #menu .scene-toggle { margin-top:6px; }
+  body[data-scene="gym"] #menu .menu-list .mbtn.dev { margin-top:4px; min-height:36px; }
+}
+
+/* Icon-led combat HUD: keep the world and player visible. */
+body.castle-play #hud-top .pill:has(#gym-status), body.castle-play .gym-note { display:none !important; }
+.gate-lock { position:fixed; z-index:5; translate:-50% -50%; width:36px; height:36px; display:grid; place-items:center; border:2px solid #f4d687; border-radius:50%; background:linear-gradient(#385f7f,#1a3452); box-shadow:0 3px 0 #10243b,0 5px 14px #0e1c2b80; pointer-events:none; }
+.gate-lock svg, .control-legend svg { fill:none; stroke:#fff3c9; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.gate-lock svg { width:21px; height:21px; }
+.control-legend { position:fixed; left:calc(14px + var(--safe-l)); bottom:calc(14px + var(--safe-b)); z-index:5; display:flex; align-items:center; gap:5px; pointer-events:none; }
+.control-legend > span { display:flex; align-items:center; gap:4px; padding:4px 6px; border:1px solid #d2b77899; border-radius:8px; background:#1c3657d9; box-shadow:0 2px #11253c; }
+.control-legend svg { width:17px; height:17px; }
+.control-legend kbd { font:700 10px/1 system-ui,sans-serif; letter-spacing:.02em; padding:2px 4px; color:#fff5da; background:#7894a966; border:1px solid #c6dce566; border-bottom-width:2px; border-radius:4px; }
+body:not(.castle-play) .control-legend { display:none; }
+@media (pointer:coarse) { .control-legend { display:none; } }
+body.castle-play .touch-btn { display:flex; flex-direction:column; justify-content:center; gap:3px; }
+body.castle-play .touch-btn::before { content:""; width:33%; height:33%; background:currentColor; mask-repeat:no-repeat; mask-position:center; mask-size:contain; }
+body.castle-play .touch-btn[data-action="sprint"]::before { mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='16' cy='4' r='2'/%3E%3Cpath d='M13 7l-4 4 3 2-4 4-4 2m8-6 3 1 2 4 3 2m-6-12 3 2 3 1'/%3E%3C/svg%3E"); }
+body.castle-play .touch-btn[data-action="attack"]::before { mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 19 18 6l2-3 1 5L8 21M4 15l5 5M3 21l2-2'/%3E%3C/svg%3E"); }
+body.castle-play .touch-btn span { font:800 11px/1 var(--display); letter-spacing:.03em; }
+body.castle-play.environment-lab-active .touch-btn[data-action="attack"] { display:flex !important; }
+.control-legend { left:50%; translate:-50% 0; }
+/* Health stays by the lower edge, with room for the touch steering area. */
+body.castle-play #hud-top .pill:has(#gym-health) { position:fixed; left:calc(14px + var(--safe-l)); bottom:calc(48px + var(--safe-b)); }
+body.castle-play .gym-class { bottom:calc(102px + var(--safe-b)); }
+@media (pointer:coarse) { body.castle-play #hud-top .pill:has(#gym-health) { bottom:calc(112px + var(--safe-b)); } }
+@media (pointer:coarse) and (max-height:400px) { body.castle-play #hud-top .pill:has(#gym-health) { bottom:calc(68px + var(--safe-b)); } }
+.gate-links { position:fixed; inset:0; width:100%; height:100%; z-index:4; overflow:visible; pointer-events:none; }
+.gate-links path { stroke:#ffe2a0; stroke-width:2; stroke-linecap:round; stroke-dasharray:3 5; filter:drop-shadow(0 1px 2px #0a1a28); opacity:.9; }
+.gate-links path[data-down="true"] { stroke:#a6e6a7; }
+.gate-action { position:fixed; z-index:5; translate:-50% -50%; width:27px; height:27px; display:grid; place-items:center; border:2px solid #f4d687; border-radius:50%; background:#27597d; box-shadow:0 2px 0 #10243b,0 3px 8px #0e1c2b88; pointer-events:none; }
+.gate-action::before { content:""; width:18px; height:18px; background:#fff4c9; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 19 18 6l2-3 1 5L8 21M4 15l5 5M3 21l2-2'/%3E%3C/svg%3E") center/contain no-repeat; }
+.gate-action[data-down="true"] { border-color:#b1e6ad; background:#356c53; }
+.gate-action[data-down="true"]::before { background:#e5ffe0; mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l4 4 10-10'/%3E%3C/svg%3E"); }
+@media (pointer:coarse) { body.castle-play .gym-class { bottom:auto; } }
+.gate-action[data-edge="left"]::after, .gate-action[data-edge="right"]::after { content:""; position:absolute; top:8px; width:7px; height:7px; border-top:2px solid #ffe3a0; border-left:2px solid #ffe3a0; }
+.gate-action[data-edge="left"]::after { left:-8px; rotate:-45deg; }
+.gate-action[data-edge="right"]::after { right:-8px; rotate:135deg; }
+
+/* The lock leads the player in; the finer guidance appears only near the door. */
+.gate-links path { fill:none; stroke-width:1.5; stroke-dasharray:2 6; animation:gate-flow 3.2s linear infinite; }
+.gate-label { fill:#fff1c9; stroke:#172b3d; stroke-width:4px; paint-order:stroke; stroke-linejoin:round; font:700 11px var(--display); letter-spacing:.025em; text-anchor:middle; }
+.gate-action { transition:opacity .25s ease; }
+@keyframes gate-flow { to { stroke-dashoffset:-16; } }
+#damage-vignette { position:fixed; inset:0; z-index:8; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,transparent 38%,rgba(118,12,12,.24) 67%,rgba(143,16,16,.65) 100%); }
+@media (prefers-reduced-motion:reduce) { .gate-links path { animation:none; } }
+
+/* Let the illuminated keep and moving fire show through the menu. */
+body[data-scene="gym"] #menu { background:linear-gradient(180deg,rgba(8,23,38,.25),rgba(8,23,38,.12) 48%,rgba(8,23,38,.48)); }
+.gate-links [hidden], .gate-action[hidden], .gate-lock[hidden] { display:none; }

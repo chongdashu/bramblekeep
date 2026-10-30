@@ -1,0 +1,6 @@
+.victory-finale { position:fixed; z-index:92; inset:0; pointer-events:none; text-align:center; color:#fff3d0; font-family:system-ui,sans-serif; }
+.victory-finale[hidden] { display:none; }
+.victory-finale-title { position:absolute; top:calc(12% + env(safe-area-inset-top)); left:0; right:0; color:#fff3ca; font-size:clamp(23px,5vw,42px); font-weight:850; letter-spacing:.04em; text-shadow:0 3px 12px #17221e,0 0 25px #c4914b; }
+.victory-finale-subtitle { position:absolute; top:calc(12% + env(safe-area-inset-top) + clamp(32px,6vw,54px)); left:0; right:0; font-size:clamp(12px,2vw,16px); font-weight:700; text-shadow:0 2px 8px #17221e; }
+.victory-finale button { pointer-events:auto; position:absolute; left:calc(14px + env(safe-area-inset-left)); bottom:calc(104px + env(safe-area-inset-bottom)); border:1px solid #d7c28b; border-radius:9px; background:#193044de; color:#fff2ce; padding:9px 13px; font:700 13px system-ui,sans-serif; cursor:pointer; }
+@media(max-height:400px){.victory-finale-title{top:8px;font-size:22px}.victory-finale-subtitle{top:36px}.victory-finale button{bottom:70px}}

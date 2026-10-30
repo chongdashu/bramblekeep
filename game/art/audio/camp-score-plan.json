@@ -1,0 +1,47 @@
+{
+  "model_id": "music_v2_5",
+  "seed": 75903,
+  "composition_plan": {
+    "chunks": [
+      {
+        "text": "[Camp before the assault]",
+        "duration_ms": 45000,
+        "positive_styles": [
+          "instrumental fantasy siege camp game music",
+          "distinct pre-battle preparation cue, resolute and anticipatory, never sleepy",
+          "measured driving marching rhythm with muted skin drums and low pizzicato strings",
+          "deep French horn calls trading with warm cello, spare and deliberate phrasing",
+          "D minor, roughly 106 BPM",
+          "same dark heroic fantasy sound world as the referenced assault score but a clearly different melody and rhythmic pattern",
+          "steady arrangement suitable for looping",
+          "rounded warm tone, restrained upper frequencies"
+        ],
+        "negative_styles": [
+          "vocals",
+          "lyrics",
+          "choir",
+          "whimsical",
+          "cheerful",
+          "tranquil",
+          "lullaby",
+          "bright bells",
+          "shrill sounds",
+          "piercing transients",
+          "rapid combat ostinato",
+          "trailer impacts",
+          "horror",
+          "fading out"
+        ],
+        "context_adherence": "medium",
+        "conditioning_ref": {
+          "song_id": "RHms2I1a2nBo1rR24WpI_upload",
+          "range": {
+            "start_ms": 1000,
+            "end_ms": 21000
+          }
+        },
+        "condition_strength": "medium"
+      }
+    ]
+  }
+}

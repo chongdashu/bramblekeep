@@ -1,0 +1,20 @@
+{
+  "mesh_count": 8,
+  "blender_z_up_bounds_metres": [
+    [
+      -3.2,
+      3.2
+    ],
+    [
+      -1.03,
+      1.03
+    ],
+    [
+      0.0,
+      5.57
+    ]
+  ],
+  "proxy_height_m": 1.6,
+  "declared_opening_width_m": 2.6,
+  "declared_arch_apex_m": 3.0
+}

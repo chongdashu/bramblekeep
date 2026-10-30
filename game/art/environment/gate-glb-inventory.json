@@ -1,0 +1,33 @@
+{
+  "status": "inventory_only",
+  "sha256": "bc05d9a657e313050309209a42c945e063c33b69d246a7221d0e41f61da9db5c",
+  "bytes": 473696,
+  "generator": "Khronos glTF Blender I/O v5.2.39",
+  "scenes": 1,
+  "default_scene": 0,
+  "nodes": 8,
+  "meshes": 8,
+  "mesh_primitives": 8,
+  "declared_mesh_triangles": 9552,
+  "primitive_modes": [
+    4
+  ],
+  "attributes": [
+    "NORMAL",
+    "POSITION",
+    "TEXCOORD_0"
+  ],
+  "materials": 8,
+  "core_texture_slots": [],
+  "alpha_modes": [
+    "OPAQUE"
+  ],
+  "images": 0,
+  "external_resources": [],
+  "extensions_required": [],
+  "extensions_used": [],
+  "skin_joint_counts": [],
+  "animations": [],
+  "warnings": [],
+  "limits": "Counts describe mesh declarations, not active-scene instances, draws or nondegenerate triangles. No bounds, geometry, weights, deformation, loop closure or material appearance validation. External/sparse timing is not decoded. Use a glTF validator and the real renderer."
+}

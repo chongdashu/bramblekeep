@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Animation that didn't behave · Bramblekeep</title>
+<style>
+@font-face { font-family: "Baloo 2"; src: url("../game/public/assets/ui/fonts/Baloo2.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
+:root { color-scheme: light; --ink: #1d3557; --ink-soft: #3e5878; --muted: #687c95; --page: #eef3f9; --card: #ffffff;
+  --blue: #2f5fa8; --blue-deep: #1d3f78; --gold: #f6c84c; --gold-deep: #a97a10; --green: #3f8a3a; --coral: #e0735a; --line: #c9d5e4; --bar: 56px;
+  --round: "Baloo 2", "Avenir Next", system-ui, sans-serif; --sans: "Avenir Next", "Trebuchet MS", system-ui, sans-serif; --mono: ui-monospace, SFMono-Regular, Menlo, monospace; }
+* { box-sizing: border-box; }
+html { scroll-snap-type: y mandatory; }
+body { margin: 0; color: var(--ink); font: 16px/1.45 var(--sans); -webkit-font-smoothing: antialiased;
+  background: radial-gradient(ellipse at 88% 0%, #fff1c7 0%, transparent 42%) fixed, radial-gradient(ellipse at 0% 100%, #dcefd5 0%, transparent 40%) fixed, var(--page); }
+a { color: var(--blue); }
+.bar { position: fixed; inset: 0 0 auto; height: var(--bar); z-index: 5; display: flex; align-items: center; gap: 14px; padding: 0 20px;
+  background: rgb(238 243 249 / 0.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+.brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); flex: none; }
+.brand .tower { width: 26px; height: 26px; flex: none; }
+.brand i { font: 800 22px/1 var(--round); font-style: normal; letter-spacing: .02em; color: var(--blue-deep); }
+.crumb { font: 800 20px/1 var(--round); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dots { display: flex; gap: 5px; margin-left: auto; flex: none; overflow-x: auto; }
+.dots a { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 7px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); font-size: 12px; font-weight: 800; text-decoration: none; }
+.dots a.key { border-color: var(--gold-deep); }
+.dots a.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+@media (max-width: 700px) { .dots { display: none; } }
+
+.slide { min-height: 100vh; padding: calc(var(--bar) + 24px) 32px 28px; scroll-snap-align: start; display: grid; align-items: center; }
+@media (max-width: 700px) { .slide { padding: calc(var(--bar) + 16px) 16px 20px; } }
+
+/* master slides */
+.beat { grid-template-columns: minmax(260px, 0.6fr) minmax(0, 1.4fr); gap: 36px; }
+@media (max-width: 900px) { .beat { grid-template-columns: 1fr; gap: 18px; } }
+.beat .num { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--blue); color: #fff; font: 800 26px/1 var(--round); }
+.beat .sec { display: block; margin-bottom: 12px; font: 800 13px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.beat[data-sec=features] .num { background: var(--green); }
+.beat[data-sec=challenges] .num { background: var(--coral); }
+.beat[data-sec=tips] .num { background: var(--gold); color: #4a3505; }
+.dots .gap { width: 10px; }
+.dots .lab { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; align-self: center; padding: 0 2px 0 6px; }
+.beat h2 { margin: 14px 0 0; font: 800 clamp(34px, 4.4vw, 58px)/1 var(--round); letter-spacing: -.01em; color: var(--blue-deep); }
+.beat .kicker { margin: 10px 0 0; font-size: clamp(17px, 1.6vw, 21px); font-weight: 700; color: var(--ink-soft); }
+.points { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.points li { font-size: clamp(18px, 1.7vw, 23px); font-weight: 700; padding-left: 26px; position: relative; }
+.points li::before { content: ""; position: absolute; left: 4px; top: .5em; width: 10px; height: 10px; border-radius: 3px; transform: rotate(45deg); background: var(--gold); box-shadow: 0 0 0 2px var(--gold-deep); }
+.open { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; padding: 10px 18px; border-radius: 999px; background: var(--blue); color: #fff;
+  font-weight: 800; text-decoration: none; }
+.open:hover { background: var(--blue-deep); }
+.open kbd { background: rgb(255 255 255 / .18); border: 0; color: #fff; }
+.stage { min-width: 0; }
+
+/* visuals */
+figure { margin: 0; min-width: 0; }
+.v-one img, .v-one video, .v-pair img, .v-pair video, .v-grid img, .v-grid video { display: block; width: 100%; border-radius: 14px; background: #dfe7f1;
+  box-shadow: 0 16px 36px rgb(29 53 87 / .2); object-fit: contain; }
+.v-one img, .v-one video { max-height: calc(100vh - var(--bar) - 150px); width: auto; max-width: 100%; margin: 0 auto; }
+.beat .v-one img, .beat .v-one video { max-height: calc(100vh - var(--bar) - 70px); }
+.v-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.v-pair img, .v-pair video { max-height: calc(100vh - var(--bar) - 230px); }
+.ls .v-one img, .ls .v-one video { max-height: calc(100vh - var(--bar) - 190px); }
+.v-grid { display: grid; gap: 12px; margin: 0 auto; align-items: start; }
+.v-grid.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 1100px; }
+.v-grid.n4 { grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, calc((100vh - var(--bar) - 270px) * 1.3333 + 12px)); }
+.v-grid img { aspect-ratio: 4 / 3; object-fit: contain; }
+.v-row { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; margin: 0 auto; width: min(100%, 1180px); }
+.v-row video, .v-row img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; background: #7a7a7a; box-shadow: 0 12px 28px rgb(29 53 87 / .2); }
+.v-grid.n3 img { max-height: calc(100vh - var(--bar) - 220px); }
+/* cropped 16:9 media: keep the top part only */
+.crop { --maxh: calc(100vh - var(--bar) - 150px); position: relative; overflow: hidden; border-radius: 14px; margin: 0 auto; background: #000;
+  aspect-ratio: var(--ar); width: min(100%, calc(var(--maxh) * var(--ar))); box-shadow: 0 16px 36px rgb(29 53 87 / .2); }
+.beat .crop { --maxh: calc(100vh - var(--bar) - 70px); }
+.v-pair .crop { --maxh: calc(100vh - var(--bar) - 230px); }
+.ls .v-one .crop { --maxh: calc(100vh - var(--bar) - 190px); }
+.v-one .crop img, .v-one .crop video, .v-pair .crop img, .v-pair .crop video, .crop img, .crop video { position: absolute; top: 0; left: 0; width: 100%; height: auto;
+  max-height: none; max-width: none; margin: 0; border-radius: 0; box-shadow: none; }
+figcaption { margin-top: 8px; font-size: 15px; font-weight: 700; color: var(--ink-soft); display: flex; gap: 8px; align-items: center; justify-content: center; }
+.tag { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; background: var(--green); color: #fff; }
+.tag.before { background: #b3bccb; color: #1f2a3c; }
+.v-compare { margin: 0 auto; width: min(100%, 980px); background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 10px 22px 14px; box-shadow: 0 12px 28px rgb(29 53 87 / .12); }
+.v-compare table { width: 100%; border-collapse: collapse; font-size: clamp(15px, 1.5vw, 21px); text-align: left; }
+.v-compare th, .v-compare td { padding: 12px 10px; border-bottom: 1px solid #e3eaf3; }
+.v-compare tr:last-child td { border-bottom: 0; }
+.v-compare th { font: 800 clamp(16px, 1.6vw, 22px)/1.1 var(--round); color: var(--ink-soft); }
+.v-compare th.hi { color: var(--blue-deep); }
+.v-compare td:first-child { color: var(--ink-soft); font-weight: 700; }
+.v-compare td.hi { font-weight: 800; color: var(--blue-deep); background: #fff6dc; }
+.v-compare td:not(:first-child) { font-weight: 700; }
+.v-compare p { margin: 8px 0 0; font-size: 13px; color: var(--muted); text-align: right; }
+.v-flow { list-style: none; margin: 0 auto; padding: 0; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 0; max-width: 1100px; }
+.v-flow li { display: flex; flex-direction: column; justify-content: center; gap: 6px; width: 210px; min-height: 130px; padding: 16px 18px; background: var(--card); border: 1px solid var(--line);
+  border-radius: 18px; box-shadow: 0 12px 28px rgb(29 53 87 / .12); text-align: left; position: relative; margin: 8px 22px; }
+.v-flow li b { font: 800 26px/1.05 var(--round); color: var(--blue-deep); }
+.v-flow li span { font-size: 16px; font-weight: 700; color: var(--ink-soft); }
+.v-flow li:not(:last-child)::after { content: "→"; position: absolute; right: -36px; top: 50%; transform: translateY(-50%); font: 800 30px/1 var(--round); color: var(--gold-deep); }
+.beat .v-flow li { width: 190px; margin: 8px 18px; }
+.ls .v-flow li { width: 226px; min-height: 170px; padding: 20px 20px; margin: 8px 20px; }
+.ls .v-flow li b { font-size: 32px; }
+.ls .v-flow li span { font-size: 19px; }
+.v-open { display: inline-flex; align-items: center; gap: 12px; margin: 0 auto; padding: 22px 34px; border-radius: 999px; background: var(--gold); color: #3d2a03;
+  font: 800 clamp(22px, 2.6vw, 34px)/1 var(--round); text-decoration: none; box-shadow: 0 16px 36px rgb(169 122 16 / .3); }
+.v-open:hover { background: #ffd866; }
+.open.alt { background: var(--card); color: var(--blue-deep); border: 1px solid var(--line); margin-left: 8px; }
+.open.alt:hover { background: #fff6dc; }
+.v-route { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: 12px; width: min(680px, 100%); counter-reset: r; text-align: left; }
+.v-route li { counter-increment: r; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 20px; font-size: clamp(20px, 2.2vw, 28px); font-weight: 800; }
+.v-route li::before { content: counter(r); display: inline-grid; place-items: center; width: 36px; height: 36px; margin-right: 14px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 18px; }
+.v-prompt { margin: 0 auto; max-width: 920px; background: #16263f; color: #eef3f9; border-radius: 18px; padding: 28px 32px; font: clamp(17px, 1.9vw, 25px)/1.55 var(--mono);
+  white-space: pre-wrap; text-align: left; box-shadow: 0 16px 36px rgb(29 53 87 / .25); }
+.v-prompt mark { background: var(--gold); color: #16263f; border-radius: 4px; padding: 0 4px; }
+.v-bars { list-style: none; margin: 0 auto; padding: 22px 26px; display: grid; gap: 9px; width: min(860px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: 18px; text-align: left; }
+.v-bars li { display: grid; grid-template-columns: minmax(150px, 0.9fr) 1.6fr 52px; gap: 12px; align-items: center; font-size: clamp(15px, 1.5vw, 20px); font-weight: 700; }
+.v-bars .bt { height: 18px; border-radius: 9px; background: #e3eaf3; overflow: hidden; }
+.v-bars .bf { display: block; height: 100%; border-radius: 9px; background: #8fa6c3; }
+.v-bars .hi .bf { background: var(--gold); }
+.v-bars .hi { color: var(--blue-deep); }
+.v-bars .bv { font: 700 15px var(--mono); color: var(--muted); text-align: right; }
+.v-bars.few { width: min(100%, 1120px); padding: 40px 44px; gap: 30px; }
+.v-bars.few li { grid-template-columns: 300px 1fr 200px; gap: 22px; font: 800 clamp(22px, 2.4vw, 34px)/1.1 var(--round); }
+.v-bars.few .bt { height: 48px; border-radius: 24px; }
+.v-bars.few .bf { border-radius: 24px; }
+.v-bars.few .bv { font: 800 clamp(22px, 2.4vw, 34px)/1 var(--round); color: var(--ink); }
+.v-bars.few .hi .bv { color: var(--blue-deep); }
+
+/* lesson slides */
+.ls { align-content: center; align-items: center; gap: 18px; text-align: center; }
+.ls h2 { margin: 0; font: 800 clamp(30px, 3.6vw, 48px)/1.08 var(--round); color: var(--blue-deep); }
+.ls .line { margin: 6px 0 0; font-size: clamp(17px, 1.7vw, 22px); font-weight: 700; color: var(--ink-soft); }
+.ls .count { font-size: 13px; color: var(--muted); font-weight: 800; letter-spacing: .08em; }
+.ls .body { display: grid; align-items: center; min-height: 0; }
+.end { text-align: center; }
+.end h2 { font: 800 clamp(30px, 4vw, 52px)/1.05 var(--round); color: var(--blue-deep); margin: 0 0 18px; }
+.end .play { font: 800 clamp(22px, 2.6vw, 34px)/1.2 var(--round); }
+
+/* video mode (?video): what the stitched voice-over video shows */
+body.video .bar, body.video a.open, body.video .keys, body.video .dots { display: none !important; }
+body.video .slide { padding-top: 48px; padding-bottom: 48px; }
+body.video .ls .body { width: 100%; max-width: 1240px; margin: 0 auto; }
+body.video video { pointer-events: none; }
+/* hero */
+.hero { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 36px; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+.hero h1 { margin: 0; font: 800 clamp(48px, 6.4vw, 88px)/.95 var(--round); color: var(--blue-deep); }
+.hero h1 span { display: block; margin-top: 14px; font: 700 clamp(18px, 2vw, 24px)/1.3 var(--sans); color: var(--ink-soft); }
+.live { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 14px; border-radius: 999px; background: var(--card); border: 1px solid var(--line);
+  font-weight: 800; text-decoration: none; color: var(--ink); }
+.live::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #2fbf57; box-shadow: 0 0 0 4px rgb(47 191 87 / .18); }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; }
+.stat .v { display: block; font: 800 32px/1 var(--round); color: var(--blue); }
+.stat .k { font-size: 14px; color: var(--muted); font-weight: 700; }
+.hero video { width: 100%; border-radius: 16px; display: block; background: #000; box-shadow: 0 18px 40px rgb(29 53 87 / .25); }
+.keys { font-size: 13px; color: var(--muted); margin-top: 22px; }
+kbd { font: 12px var(--mono); background: var(--card); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; }
+.refs { margin-top: 18px; font-size: 13px; color: var(--muted); }
+.refs a { color: var(--muted); }
+</style>
+</head>
+<body>
+<nav class="bar"><a class="brand" href="master.html#top"><svg class="tower" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 L24 13 H8 Z" fill="#2f5fa8"/><rect x="9.5" y="13" width="13" height="16" rx="1.5" fill="#c9d5e4" stroke="#1d3f78" stroke-width="1.5"/><path d="M14 29 V23 a2 2 0 0 1 4 0 V29" fill="#1d3f78"/><path d="M16 2 V-1" stroke="#a97a10" stroke-width="1.5"/><path d="M16 1 L21 2.5 L16 4" fill="#f6c84c"/></svg><i>Bramblekeep</i></a><span class="crumb">10 &middot; Animation that didn't behave</span><div class="dots"><a href="#s1" data-i="0">1</a><a href="#s2" data-i="1">2</a><a href="#s3" data-i="2">3</a><a href="#s4" data-i="3">4</a><a href="#s5" data-i="4">5</a><a href="#s6" data-i="5">6</a><a href="#s7" data-i="6">7</a><a href="#s8" data-i="7">8</a><a href="#s9" data-i="8">9</a><a href="#s10" data-i="9">10</a></div></nav>
+<section class="slide ls" id="s1">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 1 / 10</span><h2>Five animations from Tripo</h2><p class="line">Rigged and animated in one go</p></header>
+  <div class="body"><div class="v-row" style="--n:5"><figure><video data-src="media/20261027-kickoff/idle.mp4" poster="media/20261028-master/posters/idle-7fgxgn.jpg" muted loop playsinline preload="none"></video><figcaption>Idle</figcaption></figure><figure><video data-src="media/20261027-kickoff/walk.mp4" poster="media/20261028-master/posters/walk-306nle.jpg" muted loop playsinline preload="none"></video><figcaption>Walk</figcaption></figure><figure><video data-src="media/20261027-kickoff/run.mp4" poster="media/20261028-master/posters/run-y86ius.jpg" muted loop playsinline preload="none"></video><figcaption>Run</figcaption></figure><figure><video data-src="media/20261027-kickoff/jump.mp4" poster="media/20261028-master/posters/jump-ckghl9.jpg" muted loop playsinline preload="none"></video><figcaption>Jump</figcaption></figure><figure><video data-src="media/20261027-kickoff/attack.mp4" poster="media/20261028-master/posters/attack-84g0vn.jpg" muted loop playsinline preload="none"></video><figcaption>&quot;Slash&quot;</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s2">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 2 / 10</span><h2>The slash was a wave, then a bow</h2><p class="line">So it swapped in Tripo's punch instead</p></header>
+  <div class="body"><div class="v-pair" data-vpair><figure><video data-src="media/20261027-kickoff/attack.mp4" poster="media/20261028-master/posters/attack-84g0vn.jpg" muted loop playsinline preload="none"></video><figcaption><span class="tag before">Before</span>Tripo's &quot;slash&quot;</figcaption></figure><figure><video data-src="media/extra/character-kickoff/box_01.mp4" poster="media/20261028-master/posters/box_01-lz7ceq.jpg" muted loop playsinline preload="none"></video><figcaption><span class="tag after">After</span>Tripo's punch</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s3">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 3 / 10</span><h2>The run drifted sideways</h2><p class="line">Fixed in the script, so every rebuild gets it</p></header>
+  <div class="body"><ol class="v-route"><li>Asked for animations &quot;in place&quot;</li><li>The run still slid sideways</li><li>A Blender script moves the hips back</li><li>It prints the hip position to prove it</li></ol></div>
+</section>
+<section class="slide ls" id="s4">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 4 / 10</span><h2>Snapping on every turn</h2><p class="line">&quot;the characters seem to be snapping when animating when changing directions&quot;</p></header>
+  <div class="body"><figure class="v-one"><video data-src="media/20261028-broll-world-combat/broll/combat-knight-side.mp4" poster="media/20261028-master/posters/combat-knight-side-do2388.jpg" muted loop playsinline preload="none"></video></figure></div>
+</section>
+<section class="slide ls" id="s5">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 5 / 10</span><h2>&quot;walking is too fat&quot;</h2><p class="line">It read that as too fast. Walk by default, Shift to run</p></header>
+  <div class="body"><figure class="v-one"><video data-src="media/20261028-broll-teaser/broll/env-night-walk.mp4" poster="media/20261028-master/posters/env-night-walk-hsykw7.jpg" muted loop playsinline preload="none"></video></figure></div>
+</section>
+<section class="slide ls" id="s6">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 6 / 10</span><h2>Tripo's spell and bow clips didn't fit</h2><p class="line">So those attacks are short poses written in code</p></header>
+  <div class="body"><div class="v-pair" data-vpair><figure><video data-src="media/20261028-broll-world-combat/broll/hero-attack-spellcaster.mp4" poster="media/20261028-master/posters/hero-attack-spellcaster-mvpqbi.jpg" muted loop playsinline preload="none"></video><figcaption>Spellcaster</figcaption></figure><figure><video data-src="media/20261028-broll-world-combat/broll/combat-scout-arrows.mp4" poster="media/20261028-master/posters/combat-scout-arrows-jdos5u.jpg" muted loop playsinline preload="none"></video><figcaption>Scout</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s7">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 7 / 10</span><h2>No finger bones</h2><p class="line">A Blender script bends the hand round the handle</p></header>
+  <div class="body"><div class="v-pair" ><figure><img src="media/extra/broll/v2-f6f9ff3/stills/knight-jump-close-0120.jpg" alt="Sword beside the glove" /><figcaption><span class="tag before">Before</span>Sword beside the glove</figcaption></figure><figure><img src="media/extra/grip-review/comparison.jpg" alt="Hands bent closed" /><figcaption><span class="tag after">After</span>Hands bent closed</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s8">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 8 / 10</span><h2>The enemies walk on Tripo's clips</h2><p class="line">Its kick and punch didn't suit short bodies</p></header>
+  <div class="body"><div class="v-pair" data-vpair><figure><video data-src="media/20261028-broll-world-combat/broll/enemy-bloom-walk.mp4" poster="media/20261028-master/posters/enemy-bloom-walk-kej61u.jpg" muted loop playsinline preload="none"></video><figcaption>Walk: Tripo's clip</figcaption></figure><figure><video data-src="media/20261028-broll-world-combat/broll/enemy-lunge-closeup.mp4" poster="media/20261028-master/posters/enemy-lunge-closeup-220nxc.jpg" muted loop playsinline preload="none"></video><figcaption>Attack: a lunge in code</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s9">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 9 / 10</span><h2>The stump's rig failed</h2><p class="line">So a Blender script built it a simple one</p></header>
+  <div class="body"><div class="v-pair" ><figure><img src="media/extra/enemy-review/stump-walk-0.5.jpg" alt="Tripo's rig splits it" /><figcaption><span class="tag before">Before</span>Tripo's rig splits it</figcaption></figure><figure><img src="media/extra/enemy-review/stump-manual-0.25.jpg" alt="Five bones, made in Blender" /><figcaption><span class="tag after">After</span>Five bones, made in Blender</figcaption></figure></div></div>
+</section>
+<section class="slide ls" id="s10">
+  <header><span class="count">ANIMATION THAT DIDN'T BEHAVE &middot; 10 / 10</span><h2>And the jump</h2><p class="line">Zoom in on his face</p></header>
+  <div class="body"><figure class="v-one"><video data-src="media/20261028-broll-teaser/broll/knight-jump-face-slowmo.mp4" poster="media/20261028-master/posters/knight-jump-face-slowmo-35vxdd.jpg" muted loop playsinline preload="none"></video></figure></div>
+</section>
+<section class="slide end"><div><h2>Next: Gameplay that needed fixing</h2>
+  <a class="open" href="master.html#gameplay">Back to the master <kbd>&rarr;</kbd></a></div></section>
+<script>
+(() => {
+  const cfg = {"back":"master.html#animation","after":"master.html#gameplay","before":"master.html#animation"};
+  // ?video: the picture for the stitched video (no navigation, room for the face circle bottom left)
+  if (new URLSearchParams(location.search).has("video")) document.body.classList.add("video");
+  const slides = [...document.querySelectorAll(".slide")];
+  const dots = [...document.querySelectorAll(".dots a")];
+  let cur = 0;
+  const go = (i) => {
+    if (i >= slides.length) { if (cfg.after) location.href = cfg.after; return; }
+    if (i < 0) { if (cfg.before) location.href = cfg.before; return; }
+    slides[i].scrollIntoView({ block: "start" });
+  };
+  const io = new IntersectionObserver((es) => {
+    for (const e of es) if (e.isIntersecting) {
+      cur = slides.indexOf(e.target);
+      dots.forEach((d) => d.classList.toggle("on", d.dataset.i == cur));
+      if (e.target.id) history.replaceState(null, "", "#" + e.target.id);
+    }
+  }, { threshold: 0.6 });
+  slides.forEach((x) => io.observe(x));
+
+  // Videos load and play only while on screen.
+  const vio = new IntersectionObserver((es) => {
+    for (const e of es) {
+      const v = e.target;
+      if (e.isIntersecting) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else if (!v.paused) v.pause();
+    }
+  }, { threshold: 0.3 });
+  document.querySelectorAll("video[data-src]").forEach((v) => vio.observe(v));
+  document.querySelectorAll("[data-vpair]").forEach((p) => {
+    const [a, b] = p.querySelectorAll("video");
+    a.addEventListener("play", () => { b.currentTime = a.currentTime; b.play().catch(() => {}); });
+  });
+
+  addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === "ArrowRight" || k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(cur + 1); }
+    else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(cur - 1); }
+    else if (k === "Enter") { const a = slides[cur].querySelector("a.open"); if (a) location.href = a.href; }
+    else if (k === "Escape" && cfg.back) location.href = cfg.back;
+    else if (k === "0" && cfg.jump) go(0);
+    else if (cfg.jump && cfg.jump[k] !== undefined) go(cfg.jump[k]);
+  });
+})();
+</script>
+</body>
+</html>

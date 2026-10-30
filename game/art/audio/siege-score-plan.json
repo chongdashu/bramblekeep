@@ -1,0 +1,199 @@
+{
+  "model_id": "music_v2_5",
+  "seed": 41873,
+  "composition_plan": {
+    "chunks": [
+      {
+        "text": "[Menu and approach]",
+        "duration_ms": 26000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "introduction of the shared siege motif",
+          "driving restrained percussion",
+          "determined preparation to attack a castle"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      },
+      {
+        "text": "[Fighting patrols]",
+        "duration_ms": 26000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "same siege motif, active string ostinato",
+          "stronger drum groove",
+          "heroic battle momentum"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      },
+      {
+        "text": "[Gate breached]",
+        "duration_ms": 26000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "same siege motif in low brass and strings",
+          "decisive surge, doors open, advance into castle",
+          "insistent rhythmic drums"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      },
+      {
+        "text": "[Assault on the core]",
+        "duration_ms": 26000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "same siege motif, intense focused rhythmic strings",
+          "urgent close-quarters fantasy battle",
+          "persistent low drums"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      },
+      {
+        "text": "[Core near destruction]",
+        "duration_ms": 26000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "same siege motif, highest sustained tension and urgent fast rhythmic subdivision",
+          "decisive climax, continuous energy",
+          "low drums and brass without sharp accents"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      },
+      {
+        "text": "[Victory]",
+        "duration_ms": 18000,
+        "positive_styles": [
+          "instrumental fantasy castle siege game score",
+          "serious heroic adventure, determined and urgent",
+          "D minor, 116 BPM, steady driving rhythm",
+          "same recurring memorable four-note low-string motif in every section",
+          "warm low strings, restrained low brass, skin drums and wooden percussion",
+          "rounded dark timbre, clean mix, clearly audible rhythmic momentum",
+          "same siege motif, victorious resolved version",
+          "confident strong cadence, not comic or sleepy"
+        ],
+        "negative_styles": [
+          "vocals",
+          "choir",
+          "lyrics",
+          "cheerful",
+          "whimsical",
+          "playful",
+          "tranquil",
+          "twinkly bells",
+          "piercing high frequencies",
+          "shrill",
+          "horror",
+          "metal guitars",
+          "trailer impacts",
+          "abrupt ending"
+        ],
+        "context_adherence": "high"
+      }
+    ]
+  }
+}

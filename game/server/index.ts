@@ -1,0 +1,31 @@
+import { Server, matchMaker } from '@colyseus/core';
+import { WebSocketTransport } from '@colyseus/ws-transport';
+import { createHash } from 'node:crypto';
+import { realpathSync } from 'node:fs';
+import { CASTLE_PROTOCOL } from '../src/multiplayer-protocol';
+import { worldStatus } from './world-status';
+import { allowedOrigin, validateServerEnvironment } from './config';
+import { analyticsSink } from './analytics';
+import { identify } from './identity';
+import type { IncomingMessage } from 'node:http';
+validateServerEnvironment(process.env);
+// Constructing the room opens the world directory, so validate configuration first.
+const { CastleRoom, storage, progress } = await import('./room');
+const { profiles } = await import('./profiles');
+const port=Number(process.env.PORT ?? 2567);
+if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORT must be a valid TCP port');
+const transport=new WebSocketTransport();
+const latency=Number(process.env.CASTLE_TEST_LATENCY_MS ?? 0);
+if(Number.isFinite(latency)&&latency>0)transport.simulateLatency(Math.min(latency,2000));
+matchMaker.controller.getCorsHeaders=headers=>{
+ const origin=headers.get('origin');
+ return {'Access-Control-Allow-Origin':allowedOrigin(origin,process.env)?origin??'*':'invalid', 'Vary':'Origin'};
+};
+let ready=false;
+const server=new Server({transport,express:app=>{app.get('/health',(_req:unknown,res:{status(code:number):{json(value:unknown):void}})=>res.status(ready?200:503).json({status:ready?'ok':'starting',protocol:CASTLE_PROTOCOL,build:process.env.BUILD_LABEL ?? process.env.RAILWAY_GIT_COMMIT_SHA ?? process.env.RAILWAY_DEPLOYMENT_ID ?? 'development',checkout:createHash('sha256').update(realpathSync(process.cwd())).digest('hex'),auth:process.env.CASTLE_AUTH_MODE ?? 'guest',wavedashConfigured:!!process.env.WAVEDASH_GAME_CLOUD_ID,storageConfigured:!!process.env.CASTLE_DATA_DIR,railwayVolumeAttached:!!process.env.RAILWAY_VOLUME_MOUNT_PATH,analytics:analyticsSink.status(),devDebug:process.env.CASTLE_DEV_DEBUG==='1'}));app.post('/player-profile',async(req:IncomingMessage,res:{setHeader(name:string,value:string):void;status(code:number):{json(value:unknown):void};json(value:unknown):void})=>{const origin=typeof req.headers.origin==='string'?req.headers.origin:null;if(!allowedOrigin(origin,process.env)){res.status(403).json({error:'Origin not allowed'});return;}res.setHeader('Access-Control-Allow-Origin',origin??'*');res.setHeader('Vary','Origin');res.setHeader('Cache-Control','no-store');try{let body='';for await(const chunk of req){body+=chunk.toString();if(body.length>16384)throw new Error('Request too large');}const value=JSON.parse(body);if(!value||typeof value!=='object'||(typeof value.guestSecret!=='string'&&typeof value.wavedashToken!=='string'))throw new Error('Identity required');const identity=await identify(value);if(value.operation==='set'&&value.expectedId!==identity.id){res.status(409).json({error:'Player identity changed'});return;}const name=value.operation==='set'?profiles.set(identity,value.name):profiles.get(identity,typeof value.wavedashToken==='string'?value.wavedashName:undefined);res.json({id:identity.id,name,progress:progress.get(identity.id,storage.wins(identity.id))});}catch{res.status(400).json({error:'Could not load player profile'});}});app.get('/leaderboard',(_req:unknown,res:{setHeader(name:string,value:string):void;json(value:unknown):void})=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Cache-Control','no-store');const entries=storage.leaderboard().filter(row=>/^[a-f0-9]{64}$/.test(row.id)).slice(0,50).map(row=>({name:profiles.get({id:row.id,name:''}),wins:row.wins,classId:row.classId}));res.json({entries});});app.get('/world-status',async(_req:unknown,res:{setHeader(name:string,value:string):void;status(code:number):{json(value:unknown):void};json(value:unknown):void})=>{res.setHeader('Access-Control-Allow-Origin','*');res.setHeader('Cache-Control','no-store');try{const state=await worldStatus();if(!state){res.status(503).json({status:'unavailable'});return;}res.json(state);}catch{res.status(503).json({status:'unavailable'});}});}});
+server.define('castle',CastleRoom);
+await server.listen(port,process.env.HOST ?? '0.0.0.0');
+await matchMaker.createRoom('castle',{});
+ready=true;
+server.onBeforeShutdown(async()=>{ready=false;await analyticsSink.flush();});
+console.log(`Castle server listening on ${port}`);

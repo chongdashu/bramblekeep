@@ -1,0 +1,57 @@
+{
+  "created_at": "2026-10-28T05:26:18.927919+00:00",
+  "suite": "castle-assault-music-direction",
+  "version": "1",
+  "questions_sha256": "b9f9095cce89401296736226a288c69b1db6a63a326d76bdb0e1da6c446c51b1",
+  "provenance": {
+    "mode": "live",
+    "requested_model": "jev-1.14.0",
+    "requests_attempted": 1,
+    "retries": 0,
+    "recorded_at": "2026-10-28T05:26:18.927588+00:00"
+  },
+  "models": [
+    "jev-1.14.0"
+  ],
+  "summary": {
+    "cases": 1,
+    "passed": 0,
+    "failed": 0,
+    "error": 0,
+    "unlabeled": 1,
+    "all_passed": false
+  },
+  "metrics": {},
+  "latency_ms": {
+    "samples": 1,
+    "p50": 341.911,
+    "p95": 341.911
+  },
+  "usage": {
+    "input_tokens": 703,
+    "output_tokens": 53
+  },
+  "cases": [
+    {
+      "id": "castle-request",
+      "request_sha256": "0dd0330e3064470d247c5093786e689ff82f37155edbde7dd5c04a784db82d84",
+      "latency_ms": 341.911,
+      "status": "unlabeled",
+      "model": "jev-1.14.0",
+      "answers": {
+        "direction": {
+          "type": "choice",
+          "choice": "dark_adventure",
+          "confidence": 0.96,
+          "probabilities": {
+            "dark_adventure": 0.97,
+            "war_march": 0.01,
+            "storybook": 0.0,
+            "unknown": 0.02
+          }
+        }
+      },
+      "checks": {}
+    }
+  ]
+}

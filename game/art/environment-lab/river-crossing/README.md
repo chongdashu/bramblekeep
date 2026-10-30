@@ -1,0 +1,18 @@
+# River crossing asset
+
+**In review; visual work remains open.** `build.py` creates an editable Blender source and the runtime GLB. It replaces the runtime bridge boxes and the two flat river ribbons in the environment lab. The asset is a first pass, not an approved final look.
+
+- Units: metres; Blender Z-up, exported glTF Y-up. Blender `(x,y,z)` maps to runtime `(x,z,-y)`; the combined asset uses the world origin. The bridge is centered at runtime `(0,8)` and retains the existing 2.7 m walkable width. Collision remains game-owned in `environment-map.ts`.
+- River edges use the same equation as `riverEdge`; the continuous surface, bed and banks extend from x = −80 to +80 m, beyond the playable x = −22 to +22 m. The subdivided surface has a packed, non-repeating base-colour texture and `vgd_kind=liquid`. A translucent surface sits at −0.28 m above a bed at −0.90 m, with irregular textured banks meeting the landscape at 0 m. Shore pebbles and grass are decorative and leave the bridge approaches clear. The crossing includes a large landscape mesh with a channel cutout; the lab hides the engine ground plane. The liquid shader adds flowing highlights along the first UV axis, controlled by the existing liquid speed and wave settings. The engine animates its vertices and normals; the default lab wave height is 0.025 m. No normal, roughness, or reflection maps are supported by the current glTF renderer.
+- Eight bank rocks are generated from `game/src/scenes/river-bank.json`; those positions also drive player collision. Four trees in that file use the existing tree model and trunk collision. The water remains impassable except at the bridge. The bank obstacles are an approximate circle around each rock, not exact mesh collision.
+- Blender 5.2 rebuild: `'/Applications/Blender.app/Contents/MacOS/Blender' --background --python game/art/environment-lab/river-crossing/build.py`.
+- The landscape has a tileable grass-colour texture, and the bridge approaches use a separate textured dirt path with irregular beveled pavers and shallow modeled relief. Both ground materials opt into renderer bump from their base-colour textures; this does not import a Blender normal map. Both remain presentation-only: player movement still uses the existing flat collision and the pavers do not obstruct the bridge.
+- The camp end and sides of the dirt path use a packed alpha fade to blend gradually into the grass; pavers stop before the transparent end. The path uses glTF `BLEND` so both renderer backends preserve the transition.
+- Export inventory: sixteen meshes, 40,757 declared triangles, four embedded images, no external resources or required extensions. Counts are an inventory, not a performance measurement. Clean reimport checks extent, five cross sections, rock positions and the bridge-clear path:
+
+```sh
+'/Applications/Blender.app/Contents/MacOS/Blender' --background --python-exit-code 1 --python game/art/environment-lab/river-crossing/verify.py
+```
+- The channel has real modeled depth, although the surface still has no scene reflections or depth-dependent opacity. The surface uses high roughness to suppress the renderer’s oversized specular disc. Browser appearance, animated waves, export round trip, bridge clearance and matched-camera comparison still need review. Other runtime-built props remain to be replaced; this asset does not complete the requested world-wide conversion.
+
+The general liquid highlight hook was added to both renderer backends and is a candidate for upstreaming. It uses the first texture coordinate as flow direction; assets must lay out their UVs accordingly. It is not a fluid simulation or a scene-reflection pass.

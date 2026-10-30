@@ -1,0 +1,27 @@
+{
+  "tripo": {
+    "model_task": "ebfdf138-5f98-4bd9-ba45-44fd8451e111",
+    "rig_check": "940b1dc6-5007-408a-a6e3-53f45eb9f1ba",
+    "rig_task": "ce843a27-a92a-4c2f-a3e9-d13095643aa7",
+    "clip_task": "bea30226-b5d9-412a-9392-978bc33381d0",
+    "model": "P1-20260311",
+    "rig_model": "v1.0-20240301",
+    "credits": 115
+  },
+  "fal_usd": 0.0333,
+  "intended_height_m": 1.6,
+  "triangles": 11066,
+  "skin_joints": 41,
+  "clips": [
+    "idle",
+    "walk",
+    "run",
+    "jump"
+  ],
+  "glb_sha256": "2c2cfd0edec10a9f2e53cdf6929792be4a77a175acd790ee7b4306848d005af7",
+  "limitations": [
+    "No class-specific attack animation or hand sockets.",
+    "Provider in-place locomotion, foot contact, clothing deformation and loop closure require runtime verification.",
+    "Reimported representative poses inspected; complete animation cycles and runtime appearance not yet verified."
+  ]
+}

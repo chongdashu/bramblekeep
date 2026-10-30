@@ -1,0 +1,14 @@
+{
+  "base": {
+    "sword": { "x": -0.055, "y": 0.253, "z": 0.189, "yaw": 0, "pitch": 30, "roll": 12.605071492878112, "scale": 0.95, "width": 0.65 },
+    "staff": { "x": 0.015, "y": 0.217, "z": 0.158, "yaw": 0, "pitch": 0, "roll": 17.188733853924695, "scale": 1.18, "width": 0.65 },
+    "bow": { "x": -0.005, "y": -0.09, "z": 0, "yaw": 90, "pitch": 0, "roll": 10.313240312354818, "scale": 1.05, "width": 1 },
+    "arrow": { "x": 0, "y": 0, "z": 0.27, "yaw": 0, "pitch": 0, "roll": 0, "scale": 1, "width": 1 }
+  },
+  "adjustments": {
+    "sword": { "x": 0, "y": 0, "z": 0, "yaw": 0, "pitch": 0, "roll": 0 },
+    "staff": { "x": 0, "y": 0, "z": 0, "yaw": 0, "pitch": 0, "roll": 0 },
+    "bow": { "x": 0, "y": 0, "z": 0, "yaw": 0, "pitch": 0, "roll": 0 },
+    "arrow": { "x": 0, "y": 0, "z": 0, "yaw": 0, "pitch": 0, "roll": 0 }
+  }
+}

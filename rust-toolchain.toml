@@ -1,0 +1,6 @@
+# Pinned to the toolchain the game was verified with.
+# rustup installs it (and the wasm target) on first use in this directory.
+[toolchain]
+channel = "1.93.1"
+targets = ["wasm32-unknown-unknown"]
+profile = "minimal"

@@ -1,0 +1,18 @@
+/* Critical splash styling is inlined before the game bundle arrives. */
+html #boot { background: linear-gradient(180deg, rgba(25,57,95,.32), rgba(24,55,84,.68)), url('assets/ui/campfire-loading.webp') center / cover; color: white; }
+html #boot .logo { color: #fff8df; font-family: ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif; text-shadow: 0 3px 0 #315a98, 0 5px 0 #17365f, 0 8px 18px #193655; }
+html #boot .bar { background: rgba(31,54,89,.8); border: 2px solid #b7dcfa; height: 16px; }
+html #boot-fill { background: linear-gradient(90deg, #ffba32, #ffe57c); }
+html #boot .boot-label, html #boot .boot-tip { color: white; text-shadow: 0 2px 4px #193655; }
+html #press-start { background: linear-gradient(#ffe681, #ffbb32); color: #5b3810; border: 2px solid #fff0a4; border-radius: 16px; box-shadow: 0 5px 0 #bb791c; }
+
+@media (max-aspect-ratio: 9/10) { html #boot { background: linear-gradient(180deg, rgba(25,57,95,.32), rgba(24,55,84,.68)), url('assets/ui/campfire-loading.webp') center / cover; } }
+@font-face { font-family:'Baloo'; src:url('assets/ui/fonts/Baloo2.woff2') format('woff2'); font-weight:400 800; font-display:swap; }
+html #boot .logo { font-family:'Baloo', ui-rounded, system-ui, sans-serif; font-weight:800; letter-spacing:-.025em; line-height:.92; }
+html #press-start { font-family:'Baloo', ui-rounded, system-ui, sans-serif; }
+/* Once the world is ready, the same rendered scene continues under the menu. */
+html #boot.is-ready { background:linear-gradient(180deg, rgba(8,23,38,.42), rgba(8,23,38,.2) 48%, rgba(8,23,38,.66)); }
+@media (max-aspect-ratio:9/10) { html #boot.is-ready { background:linear-gradient(180deg, rgba(8,23,38,.46), rgba(8,23,38,.16) 50%, rgba(8,23,38,.7)); } }
+/* A single shrinkable track prevents the long title from shifting the column. */
+html #boot .boot-col { grid-template-columns:minmax(0,1fr); min-width:0; }
+html #boot .logo { max-width:100%; font-size:clamp(36px, 8vmin, 76px); -webkit-text-stroke:0; }

@@ -1,0 +1,58 @@
+{
+  "$comment": "This game's identity and build settings; scripts/lib/active-game.mjs validates it.",
+  "id": "bramblekeep",
+  "title": "Bramblekeep",
+  "storagePrefix": "bramblekeep",
+  "version": "0.1.0",
+  "release": {
+    "assets": [
+      "favicon.svg",
+      "wasm/*.wasm",
+      "assets/environment/*.glb",
+      "assets/characters/*.glb",
+      "assets/weapons/*.glb",
+      "assets/environment-lab/*.glb",
+      "assets/enemies/*.glb",
+      "assets/audio/*.mp3",
+      "assets/ui/*.webp",
+      "assets/ui/fonts/*.woff2",
+      "assets/ui/fonts/OFL.txt"
+    ]
+  },
+  "preview": {
+    "models": [
+      {
+        "label": "Garden gate",
+        "url": "assets/environment/gate-kit.glb"
+      },
+      {
+        "label": "Knight",
+        "url": "assets/characters/hero-knight.glb"
+      },
+      {
+        "label": "Environment kit",
+        "url": "assets/environment-lab/environment-kit.glb"
+      },
+      {
+        "label": "Bloom minion",
+        "url": "assets/enemies/bloom.glb"
+      },
+      {
+        "label": "Bramble minion",
+        "url": "assets/enemies/bramble.glb"
+      },
+      {
+        "label": "Scout",
+        "url": "assets/characters/hero-scout.glb"
+      },
+      {
+        "label": "Spellcaster",
+        "url": "assets/characters/hero-spellcaster.glb"
+      }
+    ]
+  },
+  "commands": {},
+  "vite": "vite-entry.mjs",
+  "smoke": "tests/smoke.mjs",
+  "bootStyle": "src/boot.css"
+}

@@ -1,0 +1,60 @@
+// Real two-client server run; isolated backend and result directory. No test-only gameplay commands.
+import { spawn } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { Client } from '@colyseus/sdk';
+import { createHash } from 'node:crypto';
+const secret='a'.repeat(64),identity=createHash('sha256').update(`guest:${secret}`).digest('hex');
+import { launchChrome, connect } from '../../tests/lib/cdp.mjs';
+import { canStand } from '../src/scenes/environment-map.ts';
+import { CORE_MAX_HP } from '../src/castle-patrol.ts';
+const data=mkdtempSync(join(tmpdir(),'castle-world-')),port=Number(process.env.TEST_WORLD_PORT??25967);
+const server=spawn(process.execPath,['--import','tsx','game/server/index.ts'],{env:{...process.env,PORT:String(port),CASTLE_DATA_DIR:data},stdio:['ignore','pipe','pipe']});let output='';server.stdout.on('data',v=>output+=v);server.stderr.on('data',v=>output+=v);
+const frontPort=Number(process.env.TEST_FRONT_PORT??51967);
+const vite=spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port',String(frontPort),'--strictPort'],{env:{...process.env,VITE_COLYSEUS_URL:`http://127.0.0.1:${port}`},stdio:['ignore','pipe','pipe']});let frontLog='';vite.stdout.on('data',v=>frontLog+=v);vite.stderr.on('data',v=>frontLog+=v);
+let chrome,cdp,late;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function health(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw new Error(`server exited: ${output}`);try{const r=await fetch(`http://127.0.0.1:${port}/health`);if(r.ok)return;}catch{}await sleep(100);}throw new Error(`server failed to start: ${output}`);}
+// Navigate a grid derived from the same collision function as the simulation.
+function nextStep(x,z,tx,tz,gate){
+ const size=.5, key=(a,b)=>`${a},${b}`, ix=v=>Math.round(v/size);
+ const nearest=(x,z)=>{const cx=ix(x),cz=ix(z),points=[];for(let dx=-3;dx<=3;dx++)for(let dz=-3;dz<=3;dz++){const a=cx+dx,b=cz+dz;if(canStand(a*size,b*size,gate))points.push([a,b]);}return points.sort((a,b)=>Math.hypot(a[0]*size-x,a[1]*size-z)-Math.hypot(b[0]*size-x,b[1]*size-z))[0]??[cx,cz];};
+ const start=nearest(x,z),goal=nearest(tx,tz),q=[start],prev=new Map([[key(...start),null]]);let end=null;
+ for(let i=0;i<q.length&&i<12000;i++){const [a,b]=q[i];if(Math.hypot((a-goal[0])*size,(b-goal[1])*size)<.7){end=[a,b];break;}for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=a+dx,nz=b+dz,k=key(nx,nz);if(!prev.has(k)&&canStand(nx*size,nz*size,gate)){prev.set(k,[a,b]);q.push([nx,nz]);}}}
+ if(!end)return [tx-x,tz-z];let next=end,parent=prev.get(key(...next));while(parent&&key(...parent)!==key(...start)){next=parent;parent=prev.get(key(...next));}return [next[0]*size-x,next[1]*size-z];
+}
+try{
+ await health();for(let i=0;i<100;i++){try{if((await fetch(`http://127.0.0.1:${frontPort}/`)).ok)break;}catch{}if(i===99)throw new Error(`preview failed: ${frontLog}`);await sleep(100);}
+ chrome=await launchChrome();cdp=await connect(chrome.wsUrl);const [target]=await cdp.pages(),page=await cdp.attach(target.targetId);const errors=[];page.on(m=>{if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails.exception?.description??m.params.exceptionDetails.text);});await page.S('Runtime.enable');await page.S('Page.enable');await page.S('Page.navigate',{url:`http://127.0.0.1:${frontPort}/?autostart&envDefaults`});
+ await page.waitFor("!!document.querySelector('.multiplayer-join:not([hidden])')",30000,'class selection');await page.evalJS("document.querySelector('[data-class=Scout]').click()");await page.waitFor('window.__game.multiplayer().joined',30000,'browser joined');
+ const browserSecret=await page.evalJS("localStorage.getItem('castle-guest-secret-v1')");const browserId=createHash('sha256').update(`guest:${browserSecret}`).digest('hex');const client=new Client(`http://127.0.0.1:${port}`),a=await client.join('castle',{classId:'Knight',guestSecret:secret});await page.waitFor(`window.__game.multiplayer().playerStates.some(p=>p.id===${JSON.stringify(a.sessionId)})`,10000,'second human player');
+ await sleep(250);
+ a.reconnection.minUptime=0;a.reconnection.delay=100;const reconnect=new Promise((resolve,reject)=>{const timeout=setTimeout(()=>reject(new Error('reconnection timed out')),8000);a.onReconnect(()=>{clearTimeout(timeout);resolve();});});
+ a.connection.close();await reconnect;await sleep(250);if(!a.state.players.get(a.sessionId)?.connected)throw new Error('reconnected player was not restored');
+ const firstRound=a.state.round;let sawGate=false,sawClear=false,lastPrint=0,paused=false,checkedVictory=false;
+ for(let tick=0;tick<2600;tick++){
+  const state=a.state,me=state.players.get(a.sessionId);if(!me){await sleep(50);continue;}
+  if(state.gateOpen)sawGate=true;
+  if(process.env.TEST_PAUSE_DURING_VICTORY&&!paused&&state.gateOpen&&state.coreHealth<=2){await page.S('Input.dispatchKeyEvent',{type:'keyDown',code:'Escape',key:'Escape',windowsVirtualKeyCode:27});await page.S('Input.dispatchKeyEvent',{type:'keyUp',code:'Escape',key:'Escape',windowsVirtualKeyCode:27});await page.waitFor("window.__game.phase()==='paused'",5000,'paused');paused=true;}
+  if(state.cleared){sawClear=true;a.send('input',{x:0,z:0,sprint:false,attack:false});
+   if(!checkedVictory&&!paused){await page.waitFor('window.__game.multiplayer().victorySequence',5000,'victory finale');const during=await page.evalJS("({showing:!document.querySelector('.victory-finale').hidden,resultsHidden:document.querySelector('.multiplayer-victory').hidden})");if(!during.showing||!during.resultsHidden)throw Error(`finale did not precede results: ${JSON.stringify(during)}`);
+    if(process.env.CAPTURE_FINALE){mkdirSync('out/victory-review',{recursive:true});await sleep(900);writeFileSync('out/victory-review/finale.png',Buffer.from((await page.S('Page.captureScreenshot',{format:'png'})).data,'base64'));}
+    if(process.env.TEST_SKIP_FINALE){await page.evalJS("document.querySelector('.victory-finale button').click()");await page.waitFor('!window.__game.multiplayer().victorySequence',2000,'skip finale');}
+   }
+   try{await page.waitFor("!document.querySelector('.multiplayer-victory').hidden",10000,'victory shown');}catch(error){console.log('victory debug',JSON.stringify(await page.evalJS('({phase:window.__game.phase(),state:window.__game.multiplayer(),text:document.querySelector(".multiplayer-victory").textContent,errors:document.querySelector("#fatal")?.textContent})')));throw error;}if(!checkedVictory){checkedVictory=true;const text=await page.evalJS("document.querySelector('.multiplayer-victory').textContent");if(!text.includes('Castle cleared')||!text.includes('Your defeats')||!text.includes('Top heroes')||!text.includes('Round resets in'))throw new Error(`bad victory text: ${text}`);const first=state.victoryRemaining;const winnerCount=state.victoryScores.size;if(first<1||first>15||!state.victoryScores.has(identity)||!state.victoryScores.has(browserId)||![...state.victoryScores.keys()].some(id=>id.startsWith('ai-teammate:')))throw new Error('missing humans or AI in shared victory state');late=await client.join('castle',{classId:'Scout',guestSecret:'b'.repeat(64)});await sleep(250);if(!late.state.cleared||late.state.victoryScores.size!==winnerCount||Math.abs(late.state.victoryRemaining-a.state.victoryRemaining)>1)throw new Error('late player did not receive same frozen result and timer');await page.waitFor(`Number(document.querySelector('.victory-countdown strong').textContent.replace('s',''))<${first}`,4000,'countdown advances');if(process.env.CAPTURE_VICTORY){mkdirSync('out/victory-review',{recursive:true});writeFileSync('out/victory-review/victory.png',Buffer.from((await page.S('Page.captureScreenshot',{format:'png'})).data,'base64'));await page.S('Emulation.setDeviceMetricsOverride',{width:640,height:360,deviceScaleFactor:1,mobile:false});await sleep(300);writeFileSync('out/victory-review/victory-short.png',Buffer.from((await page.S('Page.captureScreenshot',{format:'png'})).data,'base64'));await page.S('Emulation.clearDeviceMetricsOverride');}}}
+  else if(!sawClear){const targets=[...state.enemies.values()].filter(e=>e.alive).sort((u,v)=>Math.hypot(me.x-u.x,me.z-u.z)-Math.hypot(me.x-v.x,me.z-v.z));const target=state.gateOpen||me.z < -20?{x:state.guardianX,z:state.guardianZ}:state.defeats>=5?(state.leverLeft>.05?{x:-9,z:-14.3}:{x:9,z:-14.3}):targets[0];if(target){const dist=Math.hypot(target.x-me.x,target.z-me.z),attack=dist<1.65;let [dx,dz]=attack?[0,0]:nextStep(me.x,me.z,target.x,target.z,state.gateOpen);const len=Math.hypot(dx,dz)||1;dx/=len;dz/=len;a.send('input',{x:dx,z:dz,sprint:true,attack});}}
+  if(tick-lastPrint>200){lastPrint=tick;console.log('progress',JSON.stringify({tick,x:me.x,z:me.z,health:me.health,defeats:state.defeats,core:state.coreHealth,gate:state.gateOpen}));}
+  if(sawClear&&state.round>firstRound){if(state.gateOpen||state.coreHealth!==CORE_MAX_HP)throw new Error('round did not reset');break;}
+  await sleep(50);
+ }
+ if(!sawGate||!sawClear||a.state.round<=firstRound)throw new Error(`did not complete round; gate=${sawGate}, clear=${sawClear}, state=${JSON.stringify(a.state.toJSON())}`);
+ const records=readFileSync(join(data,'results.jsonl'),'utf8').trim().split('\n').map(JSON.parse),wins=records.filter(r=>r.won&&r.round===firstRound);if(wins.length!==2||!wins.some(r=>r.id===identity&&r.kills>=0)||!wins.some(r=>r.id===browserId&&r.kills===0))throw new Error(`incorrect results: ${JSON.stringify(records)}`);
+ const profile=async guestSecret=>{const r=await fetch(`http://127.0.0.1:${port}/player-profile`,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({guestSecret,operation:'get'})});if(!r.ok)throw Error('progress profile unavailable');return r.json();};
+ const winner=await profile(secret),participant=await profile(browserSecret);const winnerKills=wins.find(r=>r.id===identity).kills;if(winner.progress.battleWins!==1||winner.progress.bossFinishes!==1||winner.progress.kills.reduce((n,v)=>n+v,0)!==winnerKills||participant.progress.battleWins!==1||participant.progress.bossFinishes!==0)throw Error(`incorrect achievement progress: ${JSON.stringify({winner:winner.progress,participant:participant.progress,winnerKills})}`);
+ const leaderboard=await (await fetch(`http://127.0.0.1:${port}/leaderboard`)).json();if(leaderboard.entries.length!==2||leaderboard.entries.some(entry=>entry.wins!==1||'id' in entry))throw Error(`incorrect wins leaderboard: ${JSON.stringify(leaderboard)}`);
+ if(paused){await page.S('Input.dispatchKeyEvent',{type:'keyDown',code:'Escape',key:'Escape',windowsVirtualKeyCode:27});await page.S('Input.dispatchKeyEvent',{type:'keyUp',code:'Escape',key:'Escape',windowsVirtualKeyCode:27});await page.waitFor("window.__game.phase()==='playing' && document.querySelector('.multiplayer-victory').hidden",5000,'victory follows world reset after pause');}
+ await page.waitFor(`window.__game.multiplayer().round>${firstRound} && document.querySelector('.multiplayer-victory').hidden`,15000,'browser world reset');await page.evalJS("document.querySelector('.awards-button').click()");await page.waitFor("[...document.querySelectorAll('.achievement-row[data-unlocked=true]')].some(row=>row.textContent.includes('Castle conquered'))",5000,'participant victory achievement');await page.evalJS("document.querySelector('.achievements-close').click()");if(errors.length)throw new Error(errors.join('\n'));console.log('browser victory and multiplayer round passed',JSON.stringify({wins,round:a.state.round,night:a.state.night}));if(late)await late.leave();await a.leave();
+} finally {if(cdp)await cdp.close();if(chrome)await chrome.close();vite.kill('SIGTERM');server.kill('SIGTERM');await new Promise(r=>{server.once('exit',r);setTimeout(r,2000)});rmSync(data,{recursive:true,force:true});}
+// The SDK may retain reconnect timers after a closed room; all test resources were cleaned up above.
+process.exit(0);
